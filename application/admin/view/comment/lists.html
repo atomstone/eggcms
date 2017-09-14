@@ -1,0 +1,170 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>评论管理<i class="fa fa-angle-right"></i></li>
+    <li>评论列表</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+<!--检索 start-->
+<div class="row" style="margin-bottom:10px;">
+  <div class="col-md-12">
+	<form id="searchForm" action="{:url('Comment/lists')}">
+	  状态:{:widget('Form/select', array(array(0=>'未审核',-1=>'未通过审核',1=>'通过审核'), 'search[status]', 'search[status]', isset($search['status'])?$search['status']:'', array('class' => 'none' )))}
+	  内容:{:widget('Form/input', array('search[message]', 'search[message]', isset($search['message'])?$search['message']:'', array('class' => 'form-control input-inline' )))}
+	  原文标题:{:widget('Form/input', array('search[title]', 'search[title]', isset($search['title'])?$search['title']:'', array('class' => 'form-control input-inline' )))}
+	  <input name="p" id="p" type="hidden" value="{$Request.param.p}">
+    {:widget('Form/pageSelect', array($Request.param.pagesize))}
+    <input type="hidden" name="orderby" id="orderby" value="">
+    <input type="hidden" name="dir" id="dir" value="">
+    <button type="button" data-loading-text="正在查询..." id="btnSearchForm" class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> 查询</button>
+    <button type="button" id="btnRetSearchForm" class="btn btn-sm filter-submit margin-bottom">重置</button>
+	</form>
+	</div>
+</div>
+<!--检索 end-->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>列表</div>
+      </div>
+      <div class="portlet-body">
+        <form id="form1">
+        <table class="table  table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:5%;">id</th>
+              <th class="sorting" style="width:5%;">标识</th>
+              <th class="sorting" style="width:10%;">发表人</th>
+              <th class="sorting" style="width:20%;">内容</th>
+              <th class="sorting" style="width:15%;">发布时间</th>
+              <th class="sorting" style="width:20%;">原文标题</th>
+              <th class="sorting" style="width:5%;">状态</th>
+              <th class="sorting" style="width:30%;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($comments as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td>{$v.commentid}</td>
+              <td>{$v.sign}</td>
+              <td>{$v.userid}{$v.username}</td>
+              <td>{$v.message}</td>
+              <td><?=date('Y-m-d H:i:s', $v['created']);?></td>
+              <td><a href="{$v.url}" target="_blank">{$v.title}</a></td>
+              <td>
+                 <?php
+                 if($v['status'] == 0){
+                     echo '未审核';
+                 }elseif($v['status'] == -1){
+                     echo '<span class="badge badge-danger">不通过</span>';
+                 }elseif($v['status'] == 1){
+                     echo '<span class="badge badge-success">通过</span>';
+                 }
+                 ?>
+              </td>              
+              <td>
+                <a class="auditBut btn default btn-xs purple" href="#this" commentid="{$v['commentid']}"><i class="fa fa-edit"></i>审核 </a>
+                <a class="replyBut btn default btn-xs green" href="#this" commentid="{$v['commentid']}">回复 </a>
+                <a class="toEditForm btn default btn-xs" href="{:url('Comment/replyList', array('commentid' => $v['commentid']))}">查看回复 </a>
+              </td>
+            </tr>
+            <?php } ?>
+            <tr>
+              <td colspan="9">{$page->show()}</td>
+            </tr>
+          </tbody>
+        </table>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div>
+
+
+			
+<script>
+  
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+  
+  /*
+  * 审核
+  */
+  $(".auditBut").click(function(){
+      commentid = $(this).attr('commentid');
+      html = '<div class="radio-list">';
+      html += "<label class='radio-inline'><input type='radio' name='status' value='1' />通过</label>";
+      html += "<label class='radio-inline'><input type='radio' name='status' value='-1' />不通过</label>";
+      html += '</div>';
+      art.dialog({
+          id : 'audit',
+          background: '#343634', // 背景色
+          title : '评论审核',
+          width: 300,
+          height: 100,
+          content: html,
+          ok: function () {
+              statusval = $('.radio-list input[name="status"]:checked').val();
+              if(statusval == '' || statusval == 'undefined' || typeof(statusval)  == 'undefined' || undefined == false){
+                  error("请选择审核结果");
+                  return false;
+              }else{
+                  $.post("{:url('comment/audit')}", {commentid:commentid,statusval:statusval}, function(data){
+                      data = eval(data);
+                      if(data.code == 1){
+                    	    success(data.msg);
+                    	    TableList.listRefresh();
+                      }else{
+                          error(data.msg);
+                      }
+                  });
+              }
+          },
+          cancelVal: '关闭',
+          cancel: true //为true等价于function(){}
+      });
+  });
+  
+  /*
+  * 回复
+  */
+  $(".replyBut").click(function(){
+      commentid = $(this).attr('commentid');
+      html = '回复内容:<textarea id="replymessage" rows="6" cols="80"></textarea>';
+      art.dialog({
+          id : 'reply',
+          background: '#343634', // 背景色
+          title : '评论审核',
+          width: 600,
+          height: 100,
+          content: html,
+          ok: function () {
+              replymessage = $('#replymessage').val();
+              if(replymessage == ''){
+                  error("请填写回复内容");
+                  return false;
+              }else{
+                  $.post("{:url('comment/reply')}", {commentid:commentid,replymessage:replymessage}, function(data){
+                      data = eval(data);
+                      if(data.code == 1){
+                    	    success(data.msg);
+                    	    //TableList.listRefresh();
+                      }else{
+                          error(data.msg);
+                      }
+                  });
+              }
+          },
+          cancelVal: '关闭',
+          cancel: true //为true等价于function(){}
+      });
+  });
+    
+</script>

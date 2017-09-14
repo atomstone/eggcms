@@ -1,0 +1,113 @@
+
+<style>
+  
+.comment {
+    border: 1px solid #c3d4e7;
+    padding: 8px 15px;
+}
+.comment h4 {
+    border-bottom: 1px solid #c3d4e7;
+    margin-bottom: 15px;
+    padding-bottom: 6px;
+}
+.comment .title {
+    margin-bottom: 5px;
+}
+.comment .title span {
+    position: relative;
+    top: -5px;
+}
+.comment .content {
+    background: #f6f9fb none repeat scroll 0 0;
+    border: 1px solid #c4d5df;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 8px 10px;
+}
+.comment .content span {
+    display: block;
+}
+.comment_button {
+    margin-bottom: 15px;
+}
+.comment_button a {
+    border: 1px solid #c3d4e7;
+    padding: 5px;
+}
+.comment_button a.on {
+    background: #4c7fb6 none repeat scroll 0 0;
+    border: 1px solid #3e73a9;
+    color: #fff;
+}
+
+.comment_btn {
+    border-radius: 0 !important;
+    border-width: 0;
+    box-shadow: none !important;
+    font-size: 20px;
+    outline: medium none !important;
+    padding: 7px 14px;
+    margin-left:100px;
+    margin-bottom:10px;
+    text-shadow: none;
+}
+
+.comment_btn_blue {
+    background-color: #4d90fe;
+    color: white;
+    text-shadow: none;
+}
+
+
+</style>
+
+<div class="comment_form">
+  <form id="commentForm" action="{:url('Comment/add')}">
+    <input type="hidden" name="comment[siteid]" id="comment_siteid" value="{$siteid}">
+    <input type="hidden" name="comment[sign]" id="comment_sign" value="{$sign}">
+    <input type="hidden" name="comment[title]" id="comment_title" value="{$title}">
+    <input type="hidden" name="comment[url]" id="comment_url" value="<?=get_url();?>">
+    <input type="hidden" name="comment[authcode]" id="comment_authcode" value="{$authcode}">
+    <textarea id="comment_message" name="comment[message]" style="width:100%" rows="4"></textarea>
+    <input type="button" name="comment_but" id="comment_but" value="发布评论" class="comment_btn comment_btn_blue"/>
+  </form>
+</div>
+
+
+<div class="comment">
+  <?php foreach($comments as $v){ ?>
+    <h5 class="title fn"> <font color="#FF0000"><?=date('Y-m-d H:s',$v['created']);?></font> <?=$v['username'];?> </h5>
+    <div class="content"><?=$v['message'];?>	<div class="rt">
+      <!--
+      <a href="javascript:void(0)" onclick="reply(3, 'content_9-4-1')">回复</a>  
+      <a href="javascript:void(0)" onclick="support(3, 'content_9-4-1')">支持</a>（<font id="support_3">0</font>）
+      -->
+    </div>
+    <?php if(!empty($v['replys'])){ ?>
+      <?php foreach($v['replys'] as $reply){ ?>
+        <div class="content"><span class="blue f12">回复于 <?=date('Y-m-d H:s',$reply['replytime']);?></span><?=$reply['replymessage'];?></div>
+      <?php } ?>
+    <?php } ?>
+    </div>
+    <div class="bk30 hr mb8"></div>
+  <?php } ?>
+</div>
+
+<script>
+  $("#comment_but").click(function(){
+       $(this).val('正在发布...');
+       $(this).attr('disabled',true);
+        var fobj = $('#commentForm');
+        $.post(fobj.attr('action'), fobj.serialize(), function(data){
+            data = eval(data);
+            if(data.code == 1){
+          	    $("#comment_message").val('');
+          	    alert(data.msg);
+            }else{
+                 alert(data.msg);
+            }
+            $("#comment_but").val('发布评论');
+            $("#comment_but").attr('disabled',false);
+        });
+  });
+</script>

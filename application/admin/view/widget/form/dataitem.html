@@ -1,0 +1,73 @@
+
+
+
+<button class="btn green" data-loading-text="正在处理..." type="button" id="add_but_{$id}">增加一组</button>
+
+
+<ul id="dataitem_{$id}"></ul>
+
+<script>
+
+  $("#add_but_{$id}").click(function(){
+      var $btn = $("#add_but_{$id}").button('loading');
+      setting = '<?=$setting;?>';
+      id = '<?=$id;?>';
+      name = '<?=$name;?>';
+      num = $("#dataitem_"+id+" table").length+1;
+      $.post("{:url('Helper/createDataitem')}", {setting:setting,id:id,num:num,name:name}, function(data){
+          $("#dataitem_"+id).append(data);
+          $btn.button('reset');
+      });
+  });
+
+
+  <?php 
+  $_newval = array();
+  if(!empty($value)){ 
+      $value = json_decode($value, true);
+      foreach($value as $v){
+          $val = json_encode($v);
+          $val = base64_encode($val);
+          $_newval[] = $val;
+      }
+  } 
+  if(!empty($_newval)){
+  ?>
+      var {$id}count = <?=count($_newval);?>;    
+      var {$id}now = 0;
+      var {$id}arr = '<?=json_encode($_newval);?>';
+      {$id}arr = eval({$id}arr);
+      createItem2_{$id}({$id}now);
+      
+      function createItem2_{$id}(now){
+          if({$id}now < {$id}count){
+              var setting = '<?=$setting;?>';
+              var id = '<?=$id;?>';
+              var name = '<?=$name;?>';
+              num = $("#dataitem_"+id+" table").length;
+              num = num+1;
+              val = {$id}arr[now];
+              $.post("{:url('Helper/createDataitem')}", {setting:setting,id:id,num:num,name:name,val:val}, function(data){
+                  $("#dataitem_"+id).append(data);       
+                  {$id}now++;
+                  createItem2_{$id}({$id}now);
+              });
+          };
+      }
+    
+  <?php
+  }
+  ?>
+  
+$("#dataitem_{$id}").dragsort({ dragSelector: "li", dragBetween: true, placeHolderTemplate: "<li></li>", dragEnd: function() {resortGrade_{$id}();} });
+
+//重新整理排序
+  function resortGrade_{$id}(){
+      var num = 1;
+      $("#dataitem_{$id} li").each(function(){
+          $(this).find(".numClass").text(num);
+          num++;
+      })
+  }
+
+</script>

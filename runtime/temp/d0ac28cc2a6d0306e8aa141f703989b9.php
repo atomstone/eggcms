@@ -1,0 +1,52 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:63:"E:\www\zbzx\public/../application/admin\view\menu\typeList.html";i:1488556633;}*/ ?>
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>前台菜单管理<i class="fa fa-angle-right"></i></li>
+    <li>分类列表</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>分类列表</div>
+        <div class="actions">
+          <a href="<?php echo url('menu/typeAdd'); ?>" class="toEditForm btn btn-primary">添加分类</a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <form id="form1">
+        <table class="table table-striped table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:10%;">typeid</th>
+              <th class="sorting" style="width:45%;">分类名称</th>
+              <th class="sorting" style="width:25%;">标识</th>
+              <th class="sorting" style="width:20%;">管理操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($types as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td><?=$v['typeid'];?></td>
+              <td><?=$v['typename'];?></td>
+              <td><?=$v['code'];?></td>
+              <td>
+                <a class="toEditForm btn default btn-xs green" href="<?php echo url('menu/menuList', array('typeid' => $v['typeid'])); ?>">管理菜单 </a>
+                <a class="toEditForm btn default btn-xs purple" href="<?php echo url('menu/typeEdit', array('typeid' => $v['typeid'])); ?>"><i class="fa fa-edit"></i>修改 </a>
+              </td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+{include file="../application/admin/view/public/header.html" /}
+
+
+{include file="../application/admin/view/public/js.html" /}
+
+<!-- BEGIN BODY -->
+<body class="page-header-fixed">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-fixed-top mega-menu">
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="header-inner">
+		<!-- BEGIN LOGO -->
+		<a class="navbar-brand" href="/" target="_blank">{:config('web_name')}</a>
+		<!-- END LOGO -->
+		
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<img src="{$Think.config.web_res_root}img/menu-toggler.png" alt=""/>
+		</a>
+
+	</div>
+	<!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+	<!-- BEGIN HORIZONTAL MENU PAGE SIDEBAR1 -->
+	<div class="page-sidebar navbar-collapse collapse">
+		<!--BEGIN: SIDEBAR MENU FOR DESKTOP-->
+		<ul class="page-sidebar-menu hidden-sm hidden-xs" data-auto-scroll="true" data-slide-speed="200">
+			<li>
+				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+				<div class="sidebar-toggler hidden-sm hidden-xs">
+				</div>
+				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+			</li>
+		
+		</ul>
+	</div>
+	<!-- END BEGIN HORIZONTAL MENU PAGE SIDEBAR -->
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<div class="page-content" style="padding-top:9px;">
+		  <div class="page-content-body">
+		    
+		    ##########################################
+		    								{:widget('Form/upimg', array('data[aa]', 'aa'))}
+
+		    
+			</div>
+		</div>
+	</div>
+	<!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="footer">
+	<div class="footer-inner">
+		 <?=date('Y');?> &copy; Metronic by {:config('web_name')}.
+	</div>
+	<div class="footer-tools">
+		<span class="go-top">
+			<i class="fa fa-angle-up"></i>
+		</span>
+	</div>
+</div>
+<!-- END FOOTER -->
+
+
+
+<script>
+    jQuery(document).ready(function() {
+      
+       App.init();
+       ComponentsDropdowns.init();
+       $('.page-sidebar .ajaxify.start').click(); // load the content for the dashboard page.
+       
+             
+       $(".classic-menu-dropdown").click(function(){
+           $(".menu_master_li").hide();
+           $("."+$(this).attr('name')).show();
+           $(".classic-menu-dropdown").attr('class','classic-menu-dropdown');
+           $(this).attr('class','classic-menu-dropdown active');
+           
+           $("."+$(this).attr('name')).children('ul:first').children('li:first').children('a:first').click();
+          // 下面的 ul(.sub-menu)的li的a点击
+       });
+       
+    });
+    
+	</script>
+	
+
+{include file="../application/admin/view/public/footer.html" /}
+

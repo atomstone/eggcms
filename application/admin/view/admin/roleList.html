@@ -1,0 +1,71 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>管理员管理<i class="fa fa-angle-right"></i></li>
+    <li>角色列表</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>列表</div>
+        <div class="actions">
+          <a href="{:url('Admin/roleAdd')}" class="toEditForm btn blue"><i class="fa fa-plus"></i> 添加角色</a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <table class="table table-striped table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:8%;">roleid</th>
+              <th class="sorting" style="width:8%;">排序号</th>
+              <th class="sorting" style="width:15%;">角色名称</th>
+              <th class="sorting" style="width:30%;">描述</th>
+              <th class="sorting" style="width:8%;">状态</th>
+              <th class="sorting" style="width:30%;">管理操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($roles as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td><?=$v['roleid'];?></td>
+              <td><?=$v['listorder'];?></td>
+              <td><?=$v['rolename'];?></td>
+              <td><?=$v['description'];?></td>
+              <td><?=$v['disabled'];?></td>
+              <td>
+                <?php if($v['roleid'] == 1){ ?>
+                <?php }else{ ?>
+                <a class="toEditForm btn default btn-xs" href="{:url('Admin/roleSetting', array('roleid' => $v['roleid']))}">权限设置 </a>
+                <a class="toEditForm btn default btn-xs" href="{:url('Admin/categoryRoleSetting', array('roleid' => $v['roleid']))}">栏目权限 </a>
+                <a class="toEditForm btn default btn-xs purple" href="{:url('Admin/roleEdit', array('roleid' => $v['roleid']))}"><i class="fa fa-edit"></i>修改 </a>
+                <!--
+                <a class="btn default btn-xs black" href=""><i class="fa fa-trash-o"></i> 删除</a>
+                -->
+                <?php } ?>
+              </td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>        
+    </div>
+  </div>
+</div>
+
+
+			
+<script>
+  
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+  
+
+</script>

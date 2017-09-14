@@ -1,0 +1,81 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+
+<style>
+.myvideo {
+  width: 100%;
+  height: auto;
+}
+</style>
+
+<body class="ac">	
+	<div class="bd">		
+				<div class="tops">
+			<div class="cell topfly">		
+				<div class="ac_10 inline-block fl">
+		            <a id="showIOSActionSheet" class="color-white" href="javascript:;">
+		            	<img style="position:relative; width: 20px; margin-top: 4px;" class="" src="{$Think.config.res_site_1}/images/icon-sh.png"/>
+		            </a>
+		        </div>
+		        <div class="cell_primary">
+		        	<div class="text-center font-size-tit">
+		            	<p>{$special.title}</p>
+		            </div>
+		        </div>
+		        <div class="ac_10 inline-block fr">
+		            &nbsp;
+		        </div>
+			</div>
+{include file="../application/index/view/site_1/public/leftmenu.html" /}
+		</div>
+		
+		<div class="ac">
+		  
+            <article class="">
+	            <h1></h1>
+	            <section>
+	                <section>
+	                    <p>
+	                       <img width="100%" src="{$special.banner}"/>
+	                    </p>
+	                    <h3>{$special.description}</h3>
+	                </section>
+	            </section>
+	        </article>
+		</div>
+		<div class="space"></div>
+		
+		
+		
+<?php foreach($types as $k => $type){ ?>
+    <?php foreach($type['datas'] as $i => $v){ ?>
+
+              <a href="{:url('Special/specialDataDetail', array('dataid'=>$v.dataid))}" class="weui_panel_bd_lists">
+                <div class="title">{$v.title}</div>
+                <div class="weui_media_box weui_media_appmsg">
+                  <div class="weui_media_hd">
+                    <img class="weui_media_appmsg_thumb" src="{$v.thumb}" alt=""/>
+                  </div>
+                  <div class="weui_media_bd">
+                    <p class="weui_media_desc dx_kc_desc">{$v.description}</p>
+                  </div>
+                </div>
+              </a>      
+      
+      
+      
+    <?php } ?>
+<?php } ?>
+
+<div style="height: 48px;"></div>
+{include file="../application/index/view/site_1/public/footmenu.html" /}
+
+		
+</div>
+	
+	<a href="javascript:pageScroll();" class="backtop" id="gototop" style="display: none;"></a>
+</body>
+
+
+{include file="../application/index/view/site_1/public/footer.html" /}
+
+

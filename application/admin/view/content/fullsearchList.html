@@ -1,0 +1,106 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>全文检索<i class="fa fa-angle-right"></i></li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+
+<!--检索 start-->
+<?php
+$scopearr = array(
+    'title'   => '标题',
+    'content' => '内容',
+    'all'     => '全部'
+);
+?>
+<div class="row" style="margin-bottom:10px;text-align:center;">
+  <div class="col-md-12">
+	<form id="searchForm" action="{:url('content/fullsearchList')}">
+	  关键字:{:widget('Form/input', array('keyword', 'keyword', isset($keyword)?$keyword:'', array('class' => 'form-control input-inline' )))}
+    范围:{:widget('Form/select', array($scopearr,'scope', 'scope', isset($scope)?$scope:'title', array('class' => 'on')))}
+    <button type="button" data-loading-text="正在查询..." id="btnSearchForm" class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> 查询</button>
+    <button type="button" id="btnRetSearchForm" class="btn btn-sm filter-submit margin-bottom">重置</button>
+	</form>
+	</div>
+</div>
+<!--检索 end-->
+
+<?php if(!empty($datas)){ ?>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet box light-grey">
+
+        <div class="portlet-title">
+          <div class="caption"><i class="fa fa-case"></i>检索结果 共检索出<span style="color:red;font-weight:bold;"><?=count($datas);?></span>条符合记录</div>
+        </div>
+        <div class="portlet-body">
+          <table class="table table-striped table-bordered table-hover" id="sample_1">
+            <thead>
+              <tr>
+                <th class="sorting" style="width:15%;">归属站点</th>
+                <th class="sorting" style="width:15%;">归属栏目</th>
+                <th class="sorting" style="width:55%;">标题</th>
+                <th class="sorting" style="width:15%;">管理操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach($datas as $k => $v){ ?>
+              <tr class="odd gradeX">
+                <td><?=$v['sitename'];?></td>
+                <td><?=$v['catname'];?></td>
+                <td><?=$v['title'];?></td>
+                <td>
+                  <a class="delBtn btn default btn-xs black" catid="{$v.catid}" aid="{$v.id}" siteid="{$v.siteid}" href="#this"><i class="fa fa-trash-o"></i> 删除</a>
+                </td>
+              </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<?php } ?>
+
+			
+<script>
+  
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+
+  //删除
+  $(".delBtn").click(function(){
+      siteid = $(this).attr('siteid');
+      catid  = $(this).attr('catid');
+      aid    = $(this).attr('aid');
+      art.dialog({
+          lock: true,
+          background: '#600', // 背景色
+          opacity: 0.87,	// 透明度
+          icon: 'question2',
+          content: "您确定要删除此文章？",
+          cancelVal: '取消',
+          ok: function () {
+              $.post("{:url('content/fullsearchDel')}", {siteid:siteid,catid:catid,aid:aid}, function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    TableList.listRefresh();
+                  }else{
+                      error(data.msg);
+                  }
+              });
+          },
+          cancel: true //为true等价于function(){}
+      });
+            
+  });
+  
+</script>
+

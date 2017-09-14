@@ -1,0 +1,97 @@
+{include file="../application/admin/view/public/header.html" /}
+
+  <div id="contentRightView" class="contentRightView">
+    <div class="">
+      <div class="col-md-12">
+        <div class="portlet box light-grey">
+          <div class="portlet-body">
+            <table class="table  table-bordered table-hover" id="sample_1">
+              <tr>
+                <td colspan="3">
+                  <form id="searchForm" action="{:url('Content/relationList')}">
+                	  栏目:{:widget('Form/categorySelect', array($siteid, 'catid', 'catid', $catid, array('class'=>'aaa')))}
+                	  标题:{:widget('Form/input', array('search[title]', 'search[title]', isset($search['title'])?$search['title']:'', array('class' => 'form-control input-inline' )))}
+                	  <input name="p" id="p" type="hidden" value="{$Request.param.p}">
+                    {:widget('Form/pageSelect', array($Request.param.pagesize))}
+                    <input type="hidden" name="orderby" id="orderby" value="">
+                    <input type="hidden" name="dir" id="dir" value="">
+                    <button type="button" id="btnSearchForm"  data-loading-text="正在查询..." class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> 查询</button>
+                	</form>
+                </td>
+              </tr>
+              <?php 
+              if(isset($articles) && !empty($articles)){
+                  foreach($articles as $k => $v){ 
+              ?>
+                      <tr class="odd gradeX">
+                        <td><input type="checkbox" name="raid[]" class="checkarticleid" value="{$v.catid}|{$v.id}" txt="{$v.title}" /></td>
+                        <td>{$v.id}</td>
+                        <td>
+                          <?php 
+                          echo $v['title'];
+                          if($v['stick'] == 1){
+                              echo '<span class="badge badge-danger badge-roundless">顶</span>';
+                          }
+/* 
+                         if($v['posids'] == 1){
+                              echo '<span class="badge badge-primary badge-roundless">荐</span>';
+                          }
+*/
+                          if(!empty($v['thumb'])){
+                              echo '<span class="badge badge-warning badge-roundless">图</span>';
+                          }
+                          ?>
+                        </td>
+                      </tr>
+
+              <?php } ?>
+                <tr>
+                  <td colspan="3">{$page->show()}</td>
+                </tr>
+              <?php }else{ ?>
+                <tr><td colspan="3">无数据</td></tr>
+              <?php } ?>
+            </table>
+          </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{include file="../application/admin/view/public/js.html" /}
+
+			
+<script>
+  
+  function fy(p){
+      $("#p").val(p);
+      $("#searchForm").submit();
+  }
+
+  jQuery(document).ready(function($){
+      $("#btnSearchForm").click(function(){
+          var $btn = $("#btnSearchForm").button('loading');
+          $("#p").val(1);
+          $("#searchForm").submit();
+      });    
+  });
+  
+  $(".checkarticleid").click(function(){
+      val = $(this).val();
+      txt = $(this).attr('txt');
+      if($(this).attr('checked') == 'checked'){
+          $("#aids",window.parent.document).append('<li onclick="$(this).remove();" id="'+val+'"><input type="hidden" value="'+val+'" name="raids[]"><a href="#this">'+txt+' <span class="badge badge-danger">x</span></a></li>');
+      }else{
+          window.parent.document.getElementById(val).click();
+          //$("#"+val,window.parent.document).remove();
+      }
+      
+      
+  });
+  
+
+</script>
+
+
+{include file="../application/admin/view/public/footer.html" /}

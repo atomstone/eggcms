@@ -1,0 +1,39 @@
+
+
+<?php if($space['space_type'] == 'code'){ ?>
+      	    <?php 
+      	    foreach($ads as $k => $v){ 
+      	        $adsetting = json_decode($v['ad_setting'],true);
+      	        echo $adsetting['content'];
+      	    }
+      	    ?>
+<?php }elseif($space['space_type'] == 'imagechange'){ 
+  		    $setting = json_decode($space['space_setting'],true);
+  ?>
+    <script type="text/javascript">
+    //设置
+    myFocus.set({
+    	id:"myFocus<?=$space['space_id'];?>",//ID
+    	pattern:"<?=$setting['myfoucs_pattern'];?>",//风格
+    	txtHeight:"<?=$setting['myfoucs_txtHeight'];?>",
+    	trigger:"<?=$setting['myfoucs_trigger'];?>",
+    	wrap:"<?=$setting['myfoucs_wrap'];?>",
+    	loadIMGTimeout:"<?=$setting['myfoucs_loadIMGTimeout'];?>",
+    });
+    </script>
+    <div id="myFocus<?=$space['space_id'];?>" style="width:{$space.space_width}px;height:{$space.space_height}px;margin:0 auto;"><!--焦点图盒子-->
+      <div class="loading"><img src="{$Think.config.patch_public_js}/myfocus/img/loading.gif" alt="请稍候..." /></div><!--载入画面(可删除)-->
+      <div class="pic"><!--图片列表-->
+      	<ul>
+      	    <?php 
+      	    foreach($ads as $k => $v){ 
+      	        $adsetting = json_decode($v['ad_setting'], true);
+      	    ?>
+                <li><a href="#1"><img src="{$adsetting.src}" thumb="" alt="{$adsetting.title}" text="{$adsetting.desc}"/></a></li>
+      	    <?php } ?>
+      	</ul>
+      </div>
+    </div>
+<?php } ?>
+
+

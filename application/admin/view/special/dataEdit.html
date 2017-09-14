@@ -1,0 +1,151 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>专题管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">{$special.title} 专题</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑信息</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>修改信息
+				</div>
+				<div class="actions">
+					<a href="{:url('Special/dataList',array('specialid'=>$special.specialid))}" class="ajaxify btn btn-default">返回</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="dataid" id="dataid" value="{$info.dataid}">
+				  <input type="hidden" name="data[specialid]" id="specialid" value="{$info.specialid}">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">标题</label>
+							<div class="col-md-9">
+								{:widget('Form/input', array('data[title]', 'title', $info.title))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">来源</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[source]', 'source', $info.source))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">请选择分类</label>
+							<div class="col-md-4">
+								{:widget('Form/specialTypeSelect', array($special.specialid, 'data[typeid]', 'typeid', $info.typeid))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">缩略图</label>
+							<div class="col-md-4">
+								{:widget('Form/upOneFile', array('data[thumb]', 'thumb', $info.thumb))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">关键字</label>
+							<div class="col-md-6">
+								{:widget('Form/input', array('data[keywords]', 'keywords', $info.keywords))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">简介</label>
+							<div class="col-md-6">
+								{:widget('Form/textarea', array('data[description]', 'description', $info.description))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">内容</label>
+							<div class="col-md-9">
+								{:widget('Form/kindeditor', array('data[content]', 'content', $info.content))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">外链接</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[url]', 'url', $info.url))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">是否置顶</label>
+							<div class="col-md-4">
+								{:widget('Form/radio', array(array(0=>'不置顶',1=>'置顶'),'data[stick]', $info.stick))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">排序</label>
+							<div class="col-md-4">
+								{:widget('Form/inputnumber', array('data[listorder]', 'listorder', $info.listorder))}
+							</div>
+						</div>
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." data="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Special/dataList',array('specialid'=>$special.specialid))}" class="ajaxify btn default" data="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT data="text/javascript">
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+            
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Special/dataEdit')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Special/dataList',array('specialid'=>$special.specialid))}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

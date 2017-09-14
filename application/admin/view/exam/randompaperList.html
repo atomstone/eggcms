@@ -1,0 +1,146 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>考试管理<i class="fa fa-angle-right"></i></li>
+    <li>随机试卷列表</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+	<form id="searchForm" action="{:url('Exam/randompaperList')}">
+	</form>
+	
+{:widget('Common/examMenu',array('tag'=>1))}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>随机试卷列表</div>
+        <div class="actions">
+          <a href="{:url('Exam/randompaperCreate')}" class="toEditForm btn blue"><i class="fa fa-plus"></i> 生成随机试卷</a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <form id="form1">
+        <table class="table table-striped table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:8%;">排序号</th>
+              <th class="sorting" style="width:8%;">randompaperid</th>
+              <th class="sorting" style="width:10%;">类型</th>
+              <th class="sorting" style="width:40%;">试卷名称</th>
+              <th class="sorting" style="width:10%;">总分数</th>
+              <th class="sorting" style="width:10%;">考试时长</th>
+              <th class="sorting" style="width:10%;">管理操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($randompapers as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td><input type="text" name="setorder[{$v.randompaperid}]" value="{$v.listorder}" style="width:35px;"  onkeyup="value=value.replace(/[^\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" ></td>
+              <td><?=$v['randompaperid'];?></td>
+              <td><?=$v['type']['typename'];?></td>
+              <td><?=$v['randompapername'];?></td>
+              <td><?=$v['totalscore'];?>分</td>
+              <td><?=$v['minute'];?>分钟</td>
+              <td>
+                <a randompaperid="{$v.randompaperid}" class="showQuestionDetail btn default btn-xs green" href="#this">展开试题 </a>
+              </td>
+            </tr>
+            
+            <tr id="topiclist{$v.randompaperid}" style="display:none;">
+              <td colspan="7" align="right">
+              <table border="1" style="width:90%;" >
+              <?php 
+              $topics = json_decode($v['topics'],true);
+              foreach($topics as $j => $item){
+              ?>
+              <tr>
+                <td>第{$j}题</td>
+                <td><?=$item['topic'];?></td>
+                <td>{:config("exam.questionType")[$item.type]}</td>
+                <td>
+                  <?php 
+                  foreach($item['option'] as $i => $option){ 
+                      echo "选项".$i.":".$option;
+                      echo "<br>";
+                  }  
+                  ?>
+                </td>
+                <td>答案:<?=$item['answer'];?></td>
+              </tr>
+              <?php } ?>
+              </table>
+              </td>
+            </tr>
+            
+            <?php } ?>
+          </tbody>
+        </table>
+          <div class="form-actions">
+            <button id="btn-setorder" data-loading-text="正在处理排序..."  type="button" class="btn red">批量排序</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+  
+  //排序
+  $("#btn-setorder").click(function(){
+      var $btn = $("#btn-setorder").button('loading');
+      $.post("{:url('Exam/randompaperSetOrder')}", $('#form1').serialize(), function(data){
+          data = eval(data);
+          if(data.code == 1){
+        	    success(data.msg);
+        	    TableList.listRefresh();
+          }else{
+              error(data.msg);
+          }
+          $btn.button('reset');
+      });
+  });
+  
+  $(".showQuestionDetail").click(function(){
+      obj = $("#topiclist"+$(this).attr('randompaperid'));
+      if(obj.is(":hidden")){
+          obj.fadeIn();
+          $(this).text("收起试题");
+      }else{
+          obj.fadeOut();
+          $(this).text("展开试题");
+      }
+  });  
+  
+  /*
+  * 查看详情
+  */
+  /*
+  $(".showQuestionDetail").click(function(){
+      randompaperid = $(this).attr('randompaperid');
+      html = $("#topiclist"+randompaperid).html();
+      art.dialog({
+          id : 'audit',
+          background: '#343634', // 背景色
+          title : '查看试题',
+          width: 800,
+          height: 500,
+          content: html,
+
+      });
+  });
+  */
+  
+</script>

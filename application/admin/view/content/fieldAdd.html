@@ -1,0 +1,223 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>模型管理<i class="fa fa-angle-right"></i></li>
+    <li>{$model.name}模型字段管理<i class="fa fa-angle-right"></i></li></li>
+    <li>添加字段</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="col-auto">
+  <div class="col-1">
+    <div class="content pad-6">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>添加字段
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="#portlet-config" data-toggle="modal" class="config"></a>
+					<a href="javascript:;" class="reload"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal form-row-seperated">
+				  <input type="hidden" name="info[modelid]" value="<?=$model['modelid'];?>">
+					<div class="form-body">
+
+            <div class="form-group"> 
+              <label class="control-label col-md-3">字段类型</label>
+              <div class="col-md-4">
+								{:widget('Form/select', array(config('field.type'), 'info[formtype]', 'formtype', '', array('fun' => 'changeType(this)')))}
+              </div>
+            </div>
+
+            <div class="form-group"> 
+              <label class="control-label col-md-3">字段名</label>
+              <div class="col-md-4">
+                {:widget('Form/input', array('info[field]', 'field'))}
+                <span class="help-block">只能由小写英文字母</span>
+              </div>
+            </div>
+
+            <div class="form-group"> 
+              <label class="control-label col-md-3">字段别名</label>
+              <div class="col-md-4">
+                {:widget('Form/input', array('info[name]', 'name'))}
+                <span class="help-block">例如：文章标题</span>
+              </div>
+            </div>
+
+            <div class="form-group"> 
+              <label class="control-label col-md-3">字符长度取值范围</label>
+              <div class="col-md-6">
+                <div class="col-md-4">
+  								<div id="spinner_minlength">最小值
+  									<div class="input-group input-small">
+  										{:widget('Form/inputnumber', array('info[minlength]', 'minlength'))}
+  										<!--
+  										<input type="text"  name="info[minlength]"  id="minlength" class="spinner-input form-control" maxlength="3" readonly>
+  										<div class="spinner-buttons input-group-btn btn-group-vertical">
+  											<button type="button" class="btn spinner-up btn-xs blue">
+  											<i class="fa fa-angle-up"></i>
+  											</button>
+  											<button type="button" class="btn spinner-down btn-xs blue">
+  											<i class="fa fa-angle-down"></i>
+  											</button>
+  										</div>
+  										-->
+  									</div>
+  								</div>
+  							</div>
+                <div class="col-md-4">最大值
+  								<div id="spinner_maxlength">
+  									<div class="input-group input-small">
+                      {:widget('Form/inputnumber', array('info[maxlength]', 'maxlength'))}
+  									  <!--
+  										<input type="text"  name="info[maxlength]"  id="maxlength" class="spinner-input form-control" maxlength="3" readonly>
+  										<div class="spinner-buttons input-group-btn btn-group-vertical">
+  											<button type="button" class="btn spinner-up btn-xs blue">
+  											<i class="fa fa-angle-up"></i>
+  											</button>
+  											<button type="button" class="btn spinner-down btn-xs blue">
+  											<i class="fa fa-angle-down"></i>
+  											</button>
+  										</div>
+  										-->
+  									</div>
+  								</div>
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="form-group"> 
+              <label class="control-label col-md-3">字段提示</label>
+              <div class="col-md-4">
+                {:widget('Form/input', array('info[tips]', 'tips'))}
+                <span class="help-block">显示在字段别名下方作为表单输入提示</span>
+              </div>
+            </div>
+
+						<div class="form-group" id="group_setting" style="display:none;">
+							<label class="control-label col-md-3">表单附加属性</label>
+							<div class="col-md-4" id="div_setting">
+                
+							  
+							</div>
+						</div>
+                  
+            <div class="form-group"> 
+              <label class="control-label col-md-3">数据校验正则</label>
+              <div class="col-md-4">
+                <input type="text" name="info[pattern]" id="pattern" value="" class="form-control"> 
+                <select class="form-control input-sm" name="pattern_select" onchange="javascript:$('#pattern').val(this.value)">
+                  <option value="">常用正则</option>
+                  <option value="/^[0-9.-]+$/">数字</option>
+                  <option value="/^[0-9-]+$/">整数</option>
+                  <option value="/^[a-z]+$/i">字母</option>
+                  <option value="/^[0-9a-z]+$/i">数字+字母</option>
+                  <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">E-mail</option>
+                  <option value="/^[0-9]{5,20}$/">QQ</option>
+                  <option value="/^http:\/\//">超级链接</option>
+                  <option value="/^(1)[0-9]{10}$/">手机号码</option>
+                  <option value="/^[0-9-]{6,13}$/">电话号码</option>
+                  <option value="/^[0-9]{6}$/">邮政编码</option>
+                </select>
+                <span class="help-block">系统将通过此正则校验表单提交的数据合法性，如果不想校验数据请留空 	</span>
+            </div>
+
+            </div>
+              <div class="form-group"> 
+              <label class="control-label col-md-3">数据校验未通过的提示信息</strong></label>
+              <div class="col-md-4">
+                {:widget('Form/input', array('info[errortips]', 'errortips'))}
+                <span class="help-block"></span>
+              </div>
+            </div>
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Content/fieldList', array('modelid' => $model['modelid']))}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+  
+  $('#spinner_minlength').spinner({value:0, min: 0, max:128});
+  $('#spinner_maxlength').spinner({value:0, min: 0});
+  
+  function changeType(obj){
+      var val = $(obj).val();
+      $("#group_setting").show();
+      $.post("{:url('Helper/getFormTypeHtml')}", {formtype:val}, function(data){
+          $("#div_setting").html(data);
+      });
+  }
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Content/fieldAdd')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Content/fieldList', array('modelid' => $model['modelid']))}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

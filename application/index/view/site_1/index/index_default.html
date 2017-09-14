@@ -1,0 +1,299 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+  
+  <link href="{$site.patch_css}/index.css" rel="stylesheet" type="text/css">
+
+	<div id="content">
+		
+		<!-- row1 S -->
+		<div class="row1">
+			
+			<!--焦点轮播图 S-->
+			<div class="focusBox" id="focusNews">			
+			  {:widget('Ad/showAd', [1,1,5])}
+			</div>
+			<!--焦点轮播图 E-->
+		
+			<!-- 新闻动态 S -->
+			<dl class="boxGzdt">
+				<div class="hd">
+				<ul>
+				<li class="on">
+					<a href="{:url('Cms/index', ['catid'=>14])}" class="more">更多</a>
+					<h3 class="title"><a href="{:url('Cms/index', ['catid'=>14])}">工作动态</a></h3>
+				</li>
+				</ul>
+				</div>
+				<div class="bd">
+					<ul class="infoList infoListA">
+		       <?php 
+		       $news = widget('Position/getDatas', [1,7]);
+		       if($news){
+		       foreach($news as $k => $v){ 
+		       ?>
+		        <li class="first">
+							<span class="date">{$v.inputdate}</span>
+							<a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" title="{:cut_str($v.title,25)}">{:cut_str($v.title,25)}</a>
+						</li>
+		      <?php 
+		      }
+		      } 
+		      ?>
+					</ul>
+				</div>
+			</dl>
+			<!-- 新闻动态 E -->
+		
+			<!-- 通知公告 S -->
+			<dl class="boxTzgg">
+				<div class="xxgkHd">
+					<h3><a href="#this">教育与装备研究</a></h3>
+				</div>
+				<div class="bd">
+					<ul class="xxgkL">
+						<li class="li1 first"><a href="#this">编辑部与编委会</a><i></i></li>
+						<li class="li2"><a href="#this">刊物简介</a><i></i></li>
+						<li class="li3 last"><a href="#this">栏目设置</a><i></i></li>
+					</ul>
+					<ul class="links">
+						<li class="li1"><a href="#this" class="qlqd"><i></i><span>订阅方式</span></a></li>
+						<li class="li2"><a href="#this" class="zrqd"><i></i><span>投稿指南</span></a></li>
+					</ul>
+				</div>
+			</dl>
+			<!-- 通知公告 E -->
+			
+		</div>
+		<!-- row1 E -->
+	
+		<!-- row2 S -->
+		<div class="row2">
+		<div class="ztzl">
+		<div class="hd">
+		<a href="#this">专题栏目</a>
+		</div>
+		<div class="bd">
+		<div class="tempWrap" style="overflow:hidden; position:relative;">
+			<ul style="width: 3252px; position: relative; overflow: hidden; padding: 0px; margin: 0px; left: -535px;">
+				<li class="li7 last clone" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li1 first" style="float: left; width: 261px;"><a class="pic" title="" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li2" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li3" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li4" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li5" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li6" style="float: left; width: 261px;"><a class="pic" title="" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li7 last" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li1 first clone" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li2 clone" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li3 clone" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+				<li class="li4 clone" style="float: left; width: 261px;"><a class="pic" href="#this"><img style="width:261px;height:80px;" src="{$site.patch_img}/zt1.png"></a></li>
+			</ul>
+			</div>
+</div>
+		</div>
+		
+		</div>
+		<script type="text/javascript">
+		jQuery(".ztzl").slide({mainCell:".bd ul",autoPlay:true,effect:"leftMarquee",vis:4,interTime:50,trigger:"click"});
+		</script>
+		<!-- row2 E -->
+	
+		<!-- row3 S -->
+		<div class="row3">
+			<dl class="boxHgjj">
+				<div class="hd">
+					<ul>
+						<li class="on">
+							<a href="{:url('Cms/index', ['catid'=>4])}" class="more">更多</a>
+							<h3 class="title"><a href="{:url('Cms/index', ['catid'=>4])}">装备前沿</a></h3>
+						</li>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul class="infoList">
+						<?php 
+						$news = widget('Position/getDatas', [2,7]);
+						if($news){
+						foreach($news as $k => $v){ 
+						?>
+						<li class="<?=$k==0?'first':'';?>">
+							<span class="date">{$v.inputdate}</span>
+							<a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" title="{:cut_str($v.title,25)}">{:cut_str($v.title,25)}</a>
+						</li>
+						<?php 
+						}
+						} 
+						?>
+					</ul>
+				</div>
+			</dl>
+			<dl class="boxZcfg">
+				<div class="hd">
+					<ul>
+						<li class="on">
+							<a href="{:url('Cms/index', ['catid'=>23])}" class="more">更多</a>
+							<h3 class="title"><a href="{:url('Cms/index', ['catid'=>23])}">装备管理</a></h3>
+						</li>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul class="infoList">
+						<?php 
+						$news = widget('Position/getDatas', [3,7]);
+						if($news){
+						foreach($news as $k => $v){ 
+						?>
+						<li class="<?=$k==0?'first':'';?>">
+							<span class="date">{$v.inputdate}</span>
+							<a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" title="{:cut_str($v.title,25)}">{:cut_str($v.title,25)}</a>
+						</li>
+						<?php 
+						}
+						} 
+						?>
+					</ul>
+				</div>
+			</dl>
+		<dl class="boxJgsz">
+		<div class="hd">
+		<ul>
+		<li class="on">
+		<a href="#this" class="more">更多</a>
+		<h3 class="title"><a href="#this">机构设置</a></h3>
+		</li>
+		</ul>
+		</div>
+		<div class="bd">
+		<ul class="infoListJ">
+		<li class="li1 first"><a href="#this">机构职能</a></li>
+		<li class="li2"><a href="#this">领导班子</a></li>
+		<li class="li3"><a href="#this">机构设置</a></li>
+		<li class="li4"><a href="#this">下属机构</a></li>
+		</ul>
+		</div>
+		<div class="ts">
+		<img src="{$site.patch_img}/ts.jpg" style="width:250px;height:100px;">
+		</div>
+		</dl>
+		</div>
+		<!-- row3 E -->
+	
+		<!-- row4 S -->
+		<div class="row4">
+			<div class="bd">
+				<ul>
+					<li class="li1" style="display: list-item;">
+						<div class="pic"><img src="{$site.patch_img}/banner1.jpg" style="width:1161px;height:100px;"></div>
+						<div class="con">
+							<div class="title"><a title="gyxc02" href="#this">…</a></div>
+							<div class="bg"></div>
+						</div>
+					</li>
+					<li class="li2" style="display: none;">
+						<div class="pic"><img src="{$site.patch_img}/banner2.png" style="width:1161px;height:100px;"></div>
+						<div class="con">
+							<div class="title"><a title="gyxc01" href="#this">…</a></div>
+							<div class="bg"></div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="hd">
+				<ul>
+					<li class="li1 on"><span>1</span></li>
+					<li class="li2"><span>2</span></li>
+				</ul>
+			</div>      
+		</div>
+		<script type="text/javascript">
+		jQuery(".row4").slide({mainCell:".bd ul",autoPlay:true});
+		</script>
+		<!-- row4 E -->
+	
+		<!-- row5 S -->
+		<div class="row5">
+	
+			<dl class="boxHgjj">
+				<div class="hd">
+					<ul>
+						<li class="on">
+							<a href="{:url('Cms/index', ['catid'=>32])}" class="more">更多</a>
+							<h3 class="title"><a href="{:url('Cms/index', ['catid'=>32])}">政策制度</a></h3>
+						</li>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul class="infoList">
+						<?php 
+						$news = widget('Position/getDatas', [4,7]);
+						if($news){
+						foreach($news as $k => $v){ 
+						?>
+						<li class="<?=$k==0?'first':'';?>">
+							<span class="date">{$v.inputdate}</span>
+							<a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" title="{:cut_str($v.title,25)}">{:cut_str($v.title,25)}</a>
+						</li>
+						<?php 
+						}
+						} 
+						?>
+					</ul>
+				</div>
+			</dl>
+		
+			<dl class="boxZcfg">
+				<div class="hd">
+					<ul>
+						<li class="on">
+							<a href="{:url('Cms/index', ['catid'=>36])}" class="more">更多</a>
+							<h3 class="title"><a href="{:url('Cms/index', ['catid'=>36])}">互动交流</a></h3>
+						</li>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul class="infoList">
+						<?php 
+						$news = widget('Position/getDatas', [5,7]);
+						if($news){
+						foreach($news as $k => $v){ 
+						?>
+						<li class="<?=$k==0?'first':'';?>">
+							<span class="date">{$v.inputdate}</span>
+							<a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" title="{:cut_str($v.title,25)}">{:cut_str($v.title,25)}</a>
+						</li>
+						<?php 
+						}
+						} 
+						?>
+					</ul>
+				</div>
+			</dl>
+			
+			<dl class="boxWsbs">
+				<div class="hd">
+					<ul>
+				  	<li class="on"><h3 class="title">网上办事</h3></li>
+					</ul>
+				</div>
+				<div class="bd">
+					<ul class="link">
+						<li class="li1"><a href="#this" class="blsx"><i></i><span>办理事项</span></a></li>
+						<li class="li2"><a href="#this" class="zxzx"><i></i><span>在线咨询</span></a></li>
+						<li class="li3"><a href="#this" class="jdcx"><i></i><span>进度查询</span></a></li>
+					</ul>
+					<ul class="wsbsLink">
+						<a href="#this" class="hbxmw"></a>
+						<a href="#this" class="spxt"></a>
+					</ul>
+				</div>
+			</dl>
+			
+		</div>
+		<!-- row5 E -->
+		
+	<!-- 友情链接 S -->
+	
+	<!-- 友情链接 E -->
+	
+	</div>
+
+{include file="../application/index/view/site_1/public/footer.html" /}

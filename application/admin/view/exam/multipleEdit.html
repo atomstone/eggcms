@@ -1,0 +1,186 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>考试管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">试题管理</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑多选题</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+{:widget('Common/examMenu')}
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>{$type.typename} - 编辑多选题
+				</div>
+        <div class="actions">
+					<a href="{:url('Exam/questionList', array('typeid' => $type.typeid))}" class="ajaxify btn default"><i class="fa fa-plus"></i> 返回</a>
+        </div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="questionid" value="{$question.questionid}">
+					<div class="form-body">
+
+						<div class="form-group">
+							<label class="control-label col-md-3">题目</label>
+							<div class="col-md-9">
+								{:widget('Form/input', array('topic', 'topic', $question.topic))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">分数</label>
+							<div class="col-md-9">
+								{:widget('Form/inputnumber', array('score', 'score', $question.score))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">选项</label>
+							<div class="col-md-9">
+							  <input type="button" id="addOptionBut" onclick="addOption();" value="添加选项" />
+								<table id="option_table" style="margin-top:5px;">
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Exam/questionList', array('typeid' => $type.typeid))}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  /*
+  * 增加一个选项
+  */
+ var addOption = function(data1,data2){
+      optionval = '';
+      if(arguments[0]){          
+          optionval = data1;
+      }
+
+      mychecked = '';
+      trNum = $("#option_table").find('tr.tr_option').length;
+      trNum++;
+      if(arguments[1]){
+          answerarr = data2.split(",");
+          for(var i in answerarr){
+              if(answerarr[i] == trNum){
+                  mychecked = 'checked="checked"';
+                  break;
+              }
+          }
+      }
+      html  = '<tr class="tr_option" style="height:35px;">';
+    	html += '<td><span class="numClass badge badge-info">'+trNum+'</span></td>';
+    	html += '<td>';
+    	html += '<input  style="width:400px" class="optionClass form-control" name="option['+trNum+']" value="'+optionval+'" type="text">';
+    	html += '</td>';
+    	html += '<td style="white-space:nowrap;">';
+
+      html += '<input class="answerClass" type="checkbox" name="answer[]" value="'+trNum+'" '+mychecked+' />设为答案';
+    	html += '</td>';
+    	html += '<td><input type="button" value="删除" class="delOptionBut" onclick="delOption(this)"/></td>';
+    	html += '</tr>';
+      $('#option_table').append(html);
+}
+
+
+  /*
+  * 删除一个选项
+  */
+  var delOption = function(obj){
+      $(obj).parent().parent().remove();
+      trNum = $("#option_table").find('tr.tr_option').length;
+      if(trNum == 0){
+          $('#option_table').html('');
+      }else{ 
+          resortGrade(); //重排序号
+      }
+  }
+  
+
+  /**
+  * 重新整理选项排序
+  **/
+  var resortGrade = function(){
+      var num = 1;
+      $("tr.tr_option").each(function(){
+          $(this).find(".numClass").text(num);
+          $(this).find(".optionClass").attr('name','option['+num+']');
+          $(this).find(".answerClass").val(num);
+          num++;
+      })
+  }
+  
+  setTimeout(function(){
+      var myoptions = <?=$question["option"]?>;
+      var answer = '<?=$question["answer"];?>';
+      for(var o in myoptions){
+          addOption(myoptions[o], answer);
+      }
+  },100);
+  
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Exam/multipleEdit', array('typeid' => $type.typeid))}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Exam/questionList', array('typeid' => $type.typeid))}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+      
+  });
+    
+</SCRIPT>
+

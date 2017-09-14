@@ -1,0 +1,13 @@
+
+<?php if($formtype == 'box'){ ?>
+    <div class="radio-list">
+      <input name="info[setting][boxtype]" value="radio"    <?=isset($setting['boxtype'])&&$setting['boxtype']=='radio'?'checked':'';?> type="radio">单选按钮
+      <input name="info[setting][boxtype]" value="select"   <?=isset($setting['boxtype'])&&$setting['boxtype']=='select'?'checked':'';?> type="radio">单选下拉
+      <input name="info[setting][boxtype]" value="checkbox" <?=isset($setting['boxtype'])&&$setting['boxtype']=='checkbox'?'checked':'';?> type="radio">多选
+    </div>
+    <input type="hidden" name="info[setting][options]" id="setting_options" class="form-control select2" value="<?=isset($setting['options']) ? implode(',',$setting['options']) : '';?>">
+    <script>$("#setting_options").select2({tags: []});</script>
+<?php }elseif($formtype == 'dataitem'){  ?>
+    {:widget('Form/textarea', array('info[setting]', 'setting', !empty($setting) ? implode(';',$setting) : ''))}
+    <span class="help-block">例:标题|title|varchar;图标|ico|imgone;多图|images|imgmore;编辑器内容|content|kindeditor;文本|desc|textarea</span>
+<?php } ?>

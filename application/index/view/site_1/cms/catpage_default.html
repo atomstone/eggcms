@@ -1,0 +1,70 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+
+	<link href="{$site.patch_css}/article.css" rel="stylesheet" type="text/css">
+
+	<div id="content">
+		
+		<div class="topToolBox">
+			<div class="pathWrap">
+				<div class="path">
+					<em>您现在的位置：</em>
+					<a class="home" href="/">首页</a>&gt;
+					<?php
+			    $siteCatNavs = widget('Content/getSiteCatNav', array($siteid, $currentcat['catid'],true));
+			    if($siteCatNavs){
+			        $nav = '';
+			        foreach($siteCatNavs as $k => $v){
+			            $nav .= "<a href='".$v['url']."' target='".$v['target']."'>".$v['catname']."</a>";    
+			            if(($k+1) < count($siteCatNavs)){
+			                $nav .= "&gt;";
+			            }
+			        }
+			        echo $nav;
+			    }
+					?>
+			  </div>
+			</div>
+		</div>
+	
+		<div class="side">
+			<div id="sideMenu" class="sideBox">
+				<div class="hd">
+					<h3><?=$topcat['catname'];?>　</h3>
+				</div>
+				<div class="bd">
+					<ul class="menuList">
+	          <?php $cats = widget('Content/getDeepArrayCats', array($siteid, $topcat['catid'])); foreach($cats as $v){ ?>
+      	        <?php if($v['type'] == 2){ ?>
+                    <a href="{$v.url}" target="_blank">{$v.catname}</a>
+                <?php }else{ ?>
+      	            <li class="<?=($v['catid'] == $currentcat['catid']) ? 'on' : ''; ?>">
+      	            	<a title="{$v.catname}" href="{:url('Cms/index',array('catid'=>$v.catid))}">{$v.catname}</a>
+      	            </li>
+                <?php } ?>
+	          <?php } ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="main">
+			<div class="mainBox">
+				<div class="wHd">
+				  <h3><span>{$page.title}</span></h3>
+				</div>
+				<div class="conTxt">
+			    {$page.content}
+			  </div>
+		  </div>
+		</div>
+
+  </div>
+
+  <script>
+  	if( $("#sideMenu .bd li").size()==0 ){
+  		$("#sideMenu").hide(); 
+    }
+  </script>
+
+{include file="../application/index/view/site_1/public/footer.html" /}
+

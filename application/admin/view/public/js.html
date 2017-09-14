@@ -1,0 +1,96 @@
+<!-- END FOOTER -->
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+  <script src="{$Think.config.web_res_root}plugins/excanvas.min.js"></script>
+  <script src="{$Think.config.web_res_root}plugins/respond.min.js"></script>  
+  <![endif]-->
+<script src="{$Think.config.web_res_root}plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script type="text/javascript" src="{$Think.config.web_res_root}plugins/fuelux/js/spinner.min.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}plugins/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{$Think.config.web_res_root}plugins/bootstrap-toastr/toastr.min.js"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+
+<!--ajax上传-->
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/ajaxupload.js"></script>
+	
+<!-- END CORE PLUGINS -->
+<script src="{$Think.config.web_res_root}scripts/core/app.js"></script>
+<script src="{$Think.config.web_res_root}scripts/custom/components-dropdowns.js"></script>
+<!--表单验证-->
+<script src="{$Think.config.web_res_root}scripts/jquery.validate.js"></script>
+<!--编辑器-->
+<script charset="utf-8" src="{$Think.config.web_res_root}scripts/kindeditor-4.1.10/kindeditor-min.js"></script>
+<script charset="utf-8" src="{$Think.config.web_res_root}scripts/kindeditor-4.1.10/lang/zh_CN.js"></script>
+<link rel="stylesheet" href="{$Think.config.web_res_root}scripts/kindeditor-4.1.10/themes/default/default.css" />
+<!--对话框组件-->
+<script	src="{$Think.config.web_res_root}scripts/artDialog/jquery.artDialog.js?skin=opera"></script>
+<script src="{$Think.config.web_res_root}scripts/artDialog/plugins/iframeTools.js"></script>
+<!--时间组件-->
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/My97DatePicker/WdatePicker.js"></script>
+<!--图片上传-->
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/swfupload/handlers.js"></script>
+<!--拖拽-->
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/jquery.dragsort-0.5.2.min.js"></script>
+<!--树形结构 带复选框-->
+<link rel="stylesheet" href="{$Think.config.web_res_root}scripts/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/ztree/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/ztree/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/ztree/js/jquery.ztree.exedit-3.5.min.js"></script>
+<!--下拉联动-->
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/selectLinkage/jquery.select.js"></script>
+
+<!--区域定位-->
+<script src="{$Think.config.web_res_root}scripts/autofix_anything/js/jquery.autofix_anything.js"></script>
+<link rel="stylesheet" href="{$Think.config.web_res_root}scripts/autofix_anything/css/autofix_anything.css" type="text/css">
+<link rel="stylesheet" href="{$Think.config.web_res_root}scripts/autofix_anything/css/style.css" type="text/css">
+
+<script src="{$Think.config.web_res_root}scripts/common.js"></script>	
+
+<script src="{$Think.config.web_res_root}scripts/custom/table-my-list-ajax.js"></script>
+
+
+<script>
+  var K=window.KindEditor;
+  function createKind(id,width,height,itemstype){
+      if(itemstype == 'all'){
+          item = ['source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                		'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                		'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                		'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                		'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                		'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+                		'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                		'anchor', 'link', 'unlink'];
+      }else if(itemstype == 'basic'){
+          item = ['source', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+          'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+          'insertunorderedlist', '|', 'emoticons', 'image', 'link'];
+      }
+      K.create("#"+id,{
+      resizeType : 0,
+      width:'100%',
+      height:''+height+'',
+      afterBlur:function(){this.sync();},   //关键  同步KindEditor的值到textarea文本框   解决了多个editor的取值问题
+      items : item
+      });
+  }
+  
+
+</script>

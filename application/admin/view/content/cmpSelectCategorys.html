@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8"/>
+<title>eggCms</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="{$Think.config.web_res_root}plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+
+<!-- BEGIN THEME STYLES -->
+<link href="{$Think.config.web_res_root}css/style-metronic.css" rel="stylesheet" type="text/css"/>
+<link href="{$Think.config.web_res_root}css/style.css" rel="stylesheet" type="text/css"/>
+<link href="{$Think.config.web_res_root}css/style-responsive.css" rel="stylesheet" type="text/css"/>
+<link href="{$Think.config.web_res_root}css/plugins.css" rel="stylesheet" type="text/css"/>
+<link href="{$Think.config.web_res_root}css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="{$Think.config.web_res_root}css/custom.css" rel="stylesheet" type="text/css"/>
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="{$Think.config.web_res_root}plugins/bootstrap-toastr/toastr.min.css"/>
+<!-- END PAGE LEVEL STYLES -->
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- BEGIN BODY -->
+<body style="background-color:#ffffff !important">
+
+<table border="0" width="100%;">
+  <tr>
+    <td style="width:560px;vertical-align:top;">
+      <div class="tabbable-custom ">
+        <ul class="nav nav-tabs ">
+          <?php
+          foreach($sites as $k => $v){ 
+              echo '<li class="'.($k==0?'active':'').'"><a href="#tab_5_'.($k+1).'" data-toggle="tab">'.$v['name'].'</a></li>';
+          }
+          ?>
+        </ul>
+        <div class="tab-content">
+          <?php
+          foreach($sites as $k => $v){ 
+              echo '<div class="'.($k==0?'tab-pane active':'tab-pane').'" id="tab_5_'.($k+1).'">';
+              echo '<ul id="treeDemo'.$v['siteid'].'" class="ztree" style="width:140px;"></ul>';
+              echo '</div>';
+          }
+          ?>
+        </div>
+      </div>
+    </td>
+    <td style="vertical-align:top;">      
+      <div class="tabbable-custom" style="margin-left:5px">
+        <ul class="nav nav-tabs "><li class="active"><a href="yixuanlanmu" data-toggle="tab">已选栏目</a></li></ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="yixuanlanmu">
+            <ul class="nav nav-pills" id="selectedUl"></ul>	
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<script src="{$Think.config.web_res_root}plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="{$Think.config.web_res_root}plugins/jquery.blockui.min.js" type="text/javascript"></script>
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{$Think.config.web_res_root}plugins/bootstrap-toastr/toastr.min.js"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+
+<script src="{$Think.config.web_res_root}scripts/common.js"></script>	
+
+<!--ajax上传-->
+<script src="{$Think.config.web_res_root}scripts/core/app.js"></script>
+<!--对话框组件-->
+<script	src="{$Think.config.web_res_root}scripts/artDialog/jquery.artDialog.js?skin=opera"></script>
+<script src="{$Think.config.web_res_root}scripts/artDialog/plugins/iframeTools.js"></script>
+<!--树形结构 带复选框-->
+<link rel="stylesheet" href="{$Think.config.web_res_root}scripts/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="{$Think.config.web_res_root}scripts/ztree/js/jquery.ztree.core-3.5.js"></script>
+
+<SCRIPT type="text/javascript">
+   
+   $(document).ready(function(){
+          
+          //接收父页面参数并输出
+          $("#selectedUl").html(art.dialog.data('defaultCatValue'));
+          var catid = art.dialog.data('catid');
+          
+          var setting = {
+              check: {
+                  enable: true
+              },
+              data: {
+                  simpleData: {
+                      enable: true
+                  }
+              },
+              callback: {
+		          onClick: zTreeOnClick
+	            }
+          };
+
+          function zTreeOnClick(event, treeId, treeNode) {
+              if($("#catli"+treeNode.id).length>0){
+                  error("请不要重复选择");
+              }else if(treeNode.id == catid){
+                  error("此为主栏目不用选择");
+              }else if(treeNode.type > 0){
+                  error("此栏目不支持");
+              }else{
+                  $("#selectedUl").prepend('<li onclick="$(this).remove();" id="catli'+treeNode.id+'"><input type="hidden" value="'+treeNode.id+'" name="otherCatIds[]"><a href="#this">'+treeNode.name+' <span class="badge badge-danger">x</span></a></li>');
+              }
+          }
+      
+          <?php
+          foreach($sites as $k => $v){ 
+              echo "var zNodes".$v['siteid']." = " . $v['zNodes'] . ";";
+              echo '$.fn.zTree.init($("#treeDemo'.$v['siteid'].'"), setting, zNodes'.$v['siteid'].');';
+              echo 'var zTree = $.fn.zTree.getZTreeObj("treeDemo'.$v['siteid'].'");';
+          }
+          ?>
+          
+      });
+      
+</SCRIPT>
+
+
+
+</body>
+</html>

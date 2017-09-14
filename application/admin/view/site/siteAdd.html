@@ -1,0 +1,174 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>站点管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">站点列表</a><i class="fa fa-angle-right"></i></li>
+    <li>添加站点</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="col-auto">
+  <div class="col-1">
+    <div class="content pad-6">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>添加站点
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="#portlet-config" data-toggle="modal" class="config"></a>
+					<a href="javascript:;" class="reload"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+					<div class="form-body">
+						<h3 class="form-section">基本配置</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">站点名称</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[name]', 'name', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">站点域名</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[domain]', 'domain', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">LOGO</label>
+							<div class="col-md-4">
+							  {:widget('Form/upOneFile', array('data[logo]', 'logo'))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">ICO图片</label>
+							<div class="col-md-4">
+							  {:widget('Form/upOneFile', array('data[ico]', 'ico'))}
+							</div>
+						</div>
+
+						<h3 class="form-section">路径配置</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">JS路径</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[patch_js]', 'patch_js', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">CSS路径</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[patch_css]', 'patch_css', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">图片路径</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[patch_img]', 'patch_img', ''))}
+							</div>
+						</div>
+						
+						<h3 class="form-section">模板配置</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">首页模板</label>
+							<div class="col-md-4">
+                {:widget('Form/tmpSelect', array('data[template_index]', 'template_index', '', $siteid, 'index', 'index'))}
+							</div>
+						</div>
+
+						<h3 class="form-section">SEO配置</h3>
+
+						<div class="form-group">
+							<label class="control-label col-md-3">站点标题</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[seo_title]', 'seo_title', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">关键词</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[seo_keywords]', 'seo_keywords', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">描述</label>
+							<div class="col-md-4">
+							  {:widget('Form/textarea', array('data[seo_description]', 'seo_description', ''))}
+							</div>
+						</div>
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Site/siteList')}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+            
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Site/siteAdd')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Site/siteList')}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

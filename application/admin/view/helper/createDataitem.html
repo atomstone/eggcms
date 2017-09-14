@@ -1,0 +1,38 @@
+<?php
+$setting = json_decode($setting, true);
+?>
+<li style="list-style-type:none;">
+  <span class="badge badge-info numClass">{$num}</span>
+  <table style='width:100%;'>
+  <?php foreach($setting as $v1){ 
+        list($ctitle,$cname,$ctype) = explode('|', $v1); 
+        $_name = ''.$name.'['.$num.']['.$cname.']';
+        $_id = $id.'_'.$cname.'_'.$num;
+        $defval = '';
+        if(!empty($val)){
+            if(isset($val[$cname])){
+                $defval = $val[$cname];
+            }
+        }
+   ?>
+    <tr>
+      <td>{$ctitle}</td>
+      <td>
+        <?php if($ctype == 'varchar'){ ?>
+          <div style="margin-top:3px;">{:widget('Form/input', array($_name, $_id, $defval))}</div>
+        <?php }elseif($ctype == 'imgone'){ ?>
+          <div style="margin-top:3px;">{:widget('Form/upOneFile', array($_name, $_id, $defval))}</div>
+        <?php }elseif($ctype == 'imgmore'){ ?>
+          <div style="margin-top:3px;">{:widget('Form/upimg', array($_name, $_id, $defval))}</div>
+        <?php }elseif($ctype == 'kindeditor'){ ?>
+          <div style="margin-top:3px;">{:widget('Form/kindeditor', array($_name, $_id, $defval, array('itemstype'=>'basic','height'=>'40px')))}</div>
+        <?php }elseif($ctype == 'textarea'){ ?>
+          <div style="margin-top:3px;">{:widget('Form/textarea', array($_name, $_id, $defval))}</div>
+        <?php } ?>
+      </td>
+    </tr>
+  <?php } ?>
+  <tr><td colspan="2" style="text-align:right;"><a href="#this" onclick="javascript:if(confirm('确定要删除?')){$(this).parent().parent().parent().parent().parent().remove();} " style="color:red;">删除</a></td></tr>
+  <tr><td colspan="2" style="text-align:right;"><hr></td></tr>
+  </table>
+</li>

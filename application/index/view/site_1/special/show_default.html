@@ -1,0 +1,72 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+
+<style>
+.myvideo {
+  width: 100%;
+  height: auto;
+}
+</style>
+
+<body class="ac">	
+	<div class="bd">
+
+		<div class="tops">
+			<div class="cell topfly">		
+				<div class="ac_10 inline-block fl">
+		            <a id="showIOSActionSheet" class="color-white" href="javascript:;">
+		            	<img style="position:relative; width: 20px; margin-top: 4px;" class="" src="{$Think.config.res_site_1}/images/icon-sh.png"/>
+		            </a>
+		        </div>
+		        <div class="cell_primary">
+		        	<div class="text-center font-size-tit">
+		            	<p>详情页</p>
+		            </div>
+		        </div>
+		        <div class="ac_10 inline-block fr">
+		            &nbsp;
+		        </div>
+			</div>
+{include file="../application/index/view/site_1/public/leftmenu.html" /}
+		</div>
+
+		<div class="ac">
+            <article class="weui-article wu-article">
+	            <h1>{$data.title}</h1>
+	            <div class="clearfix t-H-de">
+                    <div class="fl">
+                    	<span class="">来源：{$data.source}     </span> 
+                        <span class=""></span> 
+                    </div>
+                    <div class="fr">
+                    	<span class=""><?=date('Y-m-d H:i:s', $data['inputtime']);?></span>
+                      <!--
+                    	widget('Zan/show', array($siteid,'content_'.$data['catid'].'-'.$data['id'],$data['title']))
+                    	-->
+                    </div>
+                </div>
+	            <section>
+	                <section>
+	                    <p>
+	                       <img width="100%" src="{$data.thumb}"/>
+	                    </p>
+
+	                    <h3>{$data.description}</h3>
+	                    <p>{$data.content}</p>
+	                </section>
+	            </section>
+	        </article>
+		</div>
+		<div style="height: 48px;"></div>
+		{include file="../application/index/view/site_1/public/footmenu.html" /}
+
+
+	</div>
+	
+	
+	<a href="javascript:pageScroll();" class="backtop" id="gototop" style="display: none;"></a>
+</body>
+<script type="text/javascript">
+
+</script>
+
+{include file="../application/index/view/site_1/public/footer.html" /}

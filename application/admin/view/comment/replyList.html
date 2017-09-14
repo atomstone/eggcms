@@ -1,0 +1,90 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>评论管理<i class="fa fa-angle-right"></i></li>
+    <li>回复列表</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+<!--检索 start-->
+<div class="row" style="margin-bottom:10px;">
+  <div class="col-md-12">
+	<form id="searchForm" action="{:url('Comment/replyList', array('commentid' => $comment['commentid']))}">
+	  状态:{:widget('Form/select', array(array(0=>'未审核',-1=>'未通过审核',1=>'通过审核'), 'search[replystatus]', 'search[replystatus]', isset($search['replystatus'])?$search['replystatus']:'', array('class' => 'none' )))}
+	  回复内容:{:widget('Form/input', array('search[replymessage]', 'search[replymessage]', isset($search['replymessage'])?$search['replymessage']:'', array('class' => 'form-control input-inline' )))}
+	  <input name="p" id="p" type="hidden" value="{$Request.param.p}">
+    {:widget('Form/pageSelect', array($Request.param.pagesize))}
+    <input type="hidden" name="orderby" id="orderby" value="">
+    <input type="hidden" name="dir" id="dir" value="">
+    <button type="button" data-loading-text="正在查询..." id="btnSearchForm" class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> 查询</button>
+    <button type="button" id="btnRetSearchForm" class="btn btn-sm filter-submit margin-bottom">重置</button>
+    <a href="{:url('Comment/lists')}" class="ajaxify btn default"> 返回</a>
+	</form>
+	</div>
+</div>
+<!--检索 end-->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>回复列表 ： {$comment.sign} ->  {$comment.title}</div>
+        <div class="actions">
+          <a href="{:url('Comment/lists')}" class="ajaxify btn default"> 返回</a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <form id="form1">
+        <table class="table  table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:5%;">id</th>
+              <th class="sorting" style="width:20%;">发表人</th>
+              <th class="sorting" style="width:50%;">回复内容</th>
+              <th class="sorting" style="width:15%;">回复时间</th>
+              <th class="sorting" style="width:10%;">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($replys as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td>{$v.replyid}</td>
+              <td>{$v.replyuserid}{$v.replyusername}</td>
+              <td>{$v.replymessage}</td>
+              <td><?=date('Y-m-d H:i:s', $v['replytime']);?></td>
+              <td>
+                 <?php
+                 if($v['replystatus'] == 0){
+                     echo '未审核';
+                 }elseif($v['replystatus'] == -1){
+                     echo '<span class="badge badge-danger">不通过</span>';
+                 }elseif($v['replystatus'] == 1){
+                     echo '<span class="badge badge-success">通过</span>';
+                 }
+                 ?>
+              </td>
+            </tr>
+            <?php } ?>
+            <tr>
+              <td colspan="9">{$page->show()}</td>
+            </tr>
+          </tbody>
+        </table>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div>
+
+
+			
+<script>
+  
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+  
+</script>

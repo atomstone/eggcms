@@ -1,0 +1,133 @@
+<?php
+
+die("####");
+?>
+{include file="../application/index/view/site_1/public/header.html" /}
+
+<div class="container main-container">
+  <div class="con-left fl">
+    <div class="tit">
+      <div class="tit-name fl">图书分类</div>
+      <div class="clear"></div>
+    </div>
+    <ul class="book-cat">
+      <?php $cats = widget('Content/getTreeCats', array($siteid, $topcat['catid'])); foreach($cats as $cat){ ?>
+          <li><a href="{:url('Cms/index',array('catid'=>$cat.catid))}">{$cat.catname}</a></li>
+      <?php } ?>
+    </ul>
+    
+    <div class="tit mt">
+      <div class="tit-name fl">标签</div>
+      <div class="clear"></div>
+    </div>
+    <div class="tag">
+      <a href="">魔戒</a>
+      <a href="">哈利波特</a>
+      <a href="">鲁迅</a>
+      <a href="">诛仙</a>
+      <a href="">罪恶生涯</a>
+      <a href="">斗穹破苍</a>
+    </div>
+    <div class="renqibang qiehuan2">
+      <div class="tit mt">
+        <div class="tit-name fl">本周人气榜</div>
+        <div class="renqi_tab">
+          <a href="javascript:;" class="hover qiehuan2_tit">阅读</a>
+          <a href="javascript:;" class="qiehuan2_tit">推荐</a>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="renqibang-list">
+
+        <ul class="qiehuan2_box hover">
+          <?php $books = widget('Content/getArticlesByModelId', array($siteid, 4, array('where'=>'','order'=>'hits desc,stick desc, listorder desc,id desc','limit'=>10))); foreach($books as $k => $v){ ?>
+              <li class="item item<?=$k+1;?>"><i><?=$k+1;?></i><a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['id']))}" target="_blank"><?=cut_str($v['title'], 10);?></a></li>
+          <?php } ?>
+        </ul>
+        <ul class="qiehuan2_box">
+          <?php $books = widget('Position/getDatas', array(2,10)); foreach($books as $k => $v){ ?>
+          <li class="item item<?=$k+1;?>"><i><?=$k+1;?></i><a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank"><?=cut_str($v['title'], 10);?></a></li>
+          <?php } ?>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="con-right fr">
+    <div class="book-right-top-pic book-slides">
+      <div class="slides_container">
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+        <li><a href="#"><img src="{$site.patch_img}/book-right-pic.jpg" alt=""></a></li>
+      </div>
+    </div>
+    
+    <?php $books = widget('Position/getDatas', array(3,4)); ?>
+    <div class="tit mt">
+      <div class="tit-name fl">总队推荐</div>
+      <div class="clear"></div>
+    </div>
+    <div class="book-channel-list">
+      <ul>
+        <?php foreach($books as $k => $v){ ?>
+        <li>
+          <a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank">
+            <span class="pic_bd"><img src="<?=$v['thumb'];?>" alt=""></span>
+            <div class="title"><?=cut_str($v['title'], 10);?></div>
+            <div class="author"><?=$v['inputtime'];?></div>
+            <p class="desc"><?=cut_str($v['description'], 50);?></p>
+          </a>
+        </li>
+        <?php } ?>
+      </ul>
+    </div>
+
+    <?php $books = widget('Position/getDatas', array(4,4)); ?>
+    <div class="tit mt">
+      <div class="tit-name fl">新书速递</div>
+      <div class="clear"></div>
+    </div>
+    <div class="book-channel-list">
+      <ul>
+        <?php foreach($books as $k => $v){ ?>
+        <li>
+          <a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank">
+            <span class="pic_bd"><img src="<?=$v['thumb'];?>" alt=""></span>
+            <div class="title"><?=cut_str($v['title'], 10);?></div>
+            <div class="author"><?=$v['inputtime'];?></div>
+            <p class="desc"><?=cut_str($v['description'], 50);?></p>
+          </a>
+        </li>
+        <?php } ?>
+      </ul>
+    </div>
+    
+    <?php $books = widget('Position/getDatas', array(5,4)); ?>
+    <div class="tit mt">
+      <div class="tit-name fl">必读精品</div>
+      <div class="clear"></div>
+    </div>
+    <div class="book-channel-list">
+      <ul>
+        <?php foreach($books as $k => $v){ ?>
+        <li>
+          <a href="{:url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['aid']))}" target="_blank" >
+            <span class="pic_bd"><img src="<?=$v['thumb'];?>" alt=""></span>
+            <div class="title"><?=cut_str($v['title'], 10);?></div>
+            <div class="author"><?=$v['inputtime'];?></div>
+            <p class="desc"><?=cut_str($v['description'], 50);?></p>
+          </a>
+        </li>
+        <?php } ?>
+      </ul>
+    </div>    
+    
+  </div>
+
+
+  <div class="clear"></div>
+</div>
+
+{include file="../application/index/view/site_1/public/footer.html" /}

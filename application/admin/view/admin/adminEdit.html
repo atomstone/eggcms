@@ -1,0 +1,137 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>管理员管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">管理员列表</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑管理员</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="col-auto">
+  <div class="col-1">
+    <div class="content pad-6">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>编辑管理员
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="#portlet-config" data-toggle="modal" class="config"></a>
+					<a href="javascript:;" class="reload"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="data[adminid]" value="{$admin.adminid}">
+					<div class="form-body">
+
+						<div class="form-group">
+							<label class="control-label col-md-3">用户名</label>
+							<div class="col-md-4">{$admin.adminname}</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">密码</label>
+							<div class="col-md-4">
+								{:widget('Form/pwd', array('data[pwd1]', 'pwd1', ''))}
+								<span class="help-block">密码应该为6-20位之间,只允许包含字母和数字,不修改密码请留空。</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">确认密码</label>
+							<div class="col-md-4">
+								{:widget('Form/pwd', array('data[pwd2]', 'pwd2', ''))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">真实姓名</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[realname]', 'realname', $admin.realname))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">所属角色</label>
+							<div class="col-md-4">
+								{:widget('Form/roleSelect', array('data[roleid]', 'roleid', $admin.roleid))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">启用状态</label>
+							<div class="col-md-4">
+								{:widget('Form/radio', array(config('admin.enable'),'data[enable]', $admin.enable))}
+              </div>
+						</div>
+					</div>
+
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('admin/adminList')}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+            
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('admin/adminEdit')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('admin/adminList')}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

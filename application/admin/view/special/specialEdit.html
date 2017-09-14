@@ -1,0 +1,236 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>专题管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">专题列表</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑专题</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+
+
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>编辑专题
+				</div>
+				<div class="actions">
+					<a href="{:url('Special/specialList')}" class="ajaxify btn btn-default">返回专题列表</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="data[specialid]" id="specialid" value="{$special.specialid}">
+					<div class="form-body"> 
+ 						<h3 class="form-section">基本选项</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">专题名称</label>
+							<div class="col-md-6">
+								{:widget('Form/input', array('data[title]', 'title', $special.title))}
+							</div>
+						</div>
+            <div class="form-group">
+							<label class="control-label col-md-3">缩略图</label>
+							<div class="col-md-4">
+								{:widget('Form/upOneFile', array('data[thumb]', 'thumb', $special.thumb))}
+							</div>
+						</div>
+            <div class="form-group">
+							<label class="control-label col-md-3">专题横幅</label>
+							<div class="col-md-4">
+								{:widget('Form/upOneFile', array('data[banner]', 'banner', $special.banner))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">专题导读</label>
+							<div class="col-md-9">
+								{:widget('Form/textarea', array('data[description]', 'description', $special.description))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">排序</label>
+							<div class="col-md-4">
+								{:widget('Form/inputnumber', array('data[listorder]', 'listorder', $special.listorder))}
+							</div>
+						</div>
+            <div class="form-group">
+							<label class="control-label col-md-3">是否推荐</label>
+							<div class="col-md-4">
+								{:widget('Form/radio', array(config('special.elite'),'data[elite]', $special.elite))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">是否启用</label>
+							<div class="col-md-4">
+								{:widget('Form/radio', array(config('special.disabled'),'data[disabled]', $special.disabled))}
+							</div>
+						</div>
+
+						<h3 class="form-section">分类节点设置</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">分类信息</label>
+							<div class="col-md-9">
+							  <input type="button" id="addTypeBut" onclick="addType();" value="添加分类" />
+								<table id="type_table" style="margin-top:5px;">
+								</table>
+							</div>
+						</div>
+
+						<h3 class="form-section">模板设置</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">首页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('data[index_template]', 'index_template', $special.index_template, $siteid, 'special', 'index'))}
+							</div>
+						</div>
+						<!--
+						<div class="form-group">
+							<label class="control-label col-md-3">列表页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('data[list_template]', 'list_template', $special.list_template, $siteid, 'special', 'list'))}
+							</div>
+						</div>
+						-->
+						<div class="form-group">
+							<label class="control-label col-md-3">内容页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('data[show_template]', 'show_template', $special.show_template, $siteid, 'special', 'show'))}
+							</div>
+						</div>
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." data="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Special/specialList')}" class="ajaxify btn default" data="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT data="text/javascript">
+
+
+
+  /*
+  * 增加一个选项
+  */
+ var addType = function(data1){
+      typename  = '';
+      listorder = '';
+      typeid    = '';
+      if(arguments[0]){          
+          typename  = data1.typename;
+          listorder = data1.listorder;
+          typeid    = data1.typeid;
+      }
+
+      trNum = $("#type_table").find('tr.tr_type').length;
+      trNum++;
+      html  = '<tr class="tr_type" style="height:35px;">';
+    	html += '<td><span class="numClass badge badge-info">'+trNum+'</span></td>';
+    	html += '<td>';
+    	html += '<input  style="width:400px" class="typeidClass form-control" name="type['+trNum+'][typeid]" value="'+typeid+'" type="hidden">';
+    	html += '名称<input  style="width:400px" class="typeClass form-control" name="type['+trNum+'][typename]" value="'+typename+'" type="text">';
+    	html += '</td>';
+    	html += '<td style="white-space:nowrap;">';
+    	html += '排序<input  style="margin-left:10px;width:50px" class="listorderClass form-control" name="type['+trNum+'][listorder]" value="'+listorder+'" type="text">';
+    	html += '</td>';
+    	html += '<td><input type="button" value="删除" class="delSpecialBut" onclick="delSpecial(this)"/></td>';
+    	html += '</tr>';
+      $('#type_table').append(html);
+}
+
+
+  /*
+  * 删除一个选项
+  */
+  var delSpecial = function(obj){
+      $(obj).parent().parent().remove();
+      trNum = $("#type_table").find('tr.tr_type').length;
+      if(trNum == 0){
+          $('#type_table').html('');
+      }else{ 
+          resortGrade(); //重排序号
+      }
+  }
+  
+  /**
+  * 重新整理选项排序
+  **/
+  var resortGrade = function(){
+      var num = 1;
+      $("tr.tr_type").each(function(){
+          $(this).find(".numClass").text(num);
+          $(this).find(".typeClass").attr('name','type['+num+'][typename]');
+          $(this).find(".listorderClass").attr('name','type['+num+'][listorder]');
+          num++;
+      })
+  }
+
+  setTimeout(function(){
+      var types = <?=json_encode($types);?>;
+      for(var o in types){
+          addType(types[o]);
+      }
+  },100);
+  
+
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+            
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Special/specialEdit')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Special/specialList')}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

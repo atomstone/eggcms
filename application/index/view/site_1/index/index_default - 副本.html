@@ -1,0 +1,48 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+
+<link href="{$site.patch_css}/zzsc.css" rel="stylesheet">
+
+<div class="fullwidthbanner-container homeCarousel min-w">  
+  
+  <div class="banner-main-box"> 
+    <div class="banner-main" style=""> 
+      <div class="bus-sub-title">
+        <a href="http://security.lanxum.com/" target="_blank"><img src="{$site.patch_img}/ban2.jpg"></a>
+      </div>
+      <div class="bus">
+        <a href="http://edu.lanxum.com/" target="_blank"><img src="{$site.patch_img}/bus.png"></a>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<div class="indexmain">
+  <ul>
+    <?php 
+    $menus = widget('Menu/getMenus', array($siteid, 'indexmiddle')); 
+    foreach($menus as $k => $v){ 
+    ?>
+        <li><a href="{$v.url}" target="{$v.target}"><img src="{$v.image}" alt=""><p>{$v.menuname}</p></a></li>
+    <?php } ?>
+  </ul>
+</div>
+<div class="brand min-w">
+  <div class="con">
+  <div class="tit"><a href="javascript:;">旗下品牌</a></div>
+    <ul>
+    <?php 
+    $links = widget('Links/getLinksByCode', array($siteid, 'qixiapinpai')); 
+    foreach($links as $v){
+        echo '<li><a href="'.$v['url'].'" target="_blank"><img src="'.$v['logo'].'" alt="'.$v['name'].'"></a></li>';
+    }
+    ?>
+    </ul>
+  </div>
+</div>
+
+  
+  
+<script src="{$site.patch_js}/index.js"></script>
+
+{include file="../application/index/view/site_1/public/footer.html" /}
+

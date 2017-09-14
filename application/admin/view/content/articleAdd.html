@@ -1,0 +1,184 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>内容管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">{$category['catname']}栏目</a><i class="fa fa-angle-right"></i></li>
+    <li>添加内容</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>添加文章
+				</div>
+        <div class="actions">
+          <button class="btn blue subBtn" data-loading-text="正在处理..." onclick="javascript:$('#sub').click();"><i class="fa fa-check"></i>保存</button>
+          <a href="{:url('Content/articleList', array('catid' => $category['catid']))}" class="ajaxifyContent btn default"><i class="fa fa-reply"></i> 返回</a>
+        </div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal form-row-seperated">
+					<div class="form-body">
+					  					  
+            <div class="form-group"> 
+              <label class="control-label col-md-2" style="font-weight:bold;">栏目</label>
+              <div class="col-md-9">
+								<input type="hidden" name="catid" id="catid" value="{$category.catid}">
+								{$category.catname}
+                <a href="#this" id="addOtherCat">[同时发布到其他栏目]</a>
+                <br>
+                <ul class="nav nav-pills" id="selectedUl"></ul>	
+              </div>
+            </div>
+
+					  <?php foreach($fields as $k => $v){ ?>
+					  {:widget('Form/getArticleForm', array($v))}
+					  <?php } ?>
+
+            <div class="form-group" style="color:red;"> 
+              <label class="control-label col-md-2" style="color:#000000;font-weight:bold;">添加相关</label>
+              <div class="col-md-9">
+								{:widget('Form/getRelation', array($siteid,$category.catid))}
+              </div>
+            </div>
+
+            <div class="form-group" style="color:red;"> 
+              <label class="control-label col-md-2" style="color:#000000;font-weight:bold;">推荐位</label>
+              <div class="col-md-9">
+								{:widget('Form/positionChecks', array($siteid,$category.catid))}
+              </div>
+            </div>
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="subBtn btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Content/articleList', array('catid' => $category['catid']))}" class="ajaxifyContent btn default" type="button" id="gobackBtn"><i class="fa fa-reply"></i>返回</button>
+						</div>
+					</div>
+					
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  $("#relationBut").click(function(){
+      var url = $(this).attr('url');
+      art.dialog.open(
+          url, 
+          {
+              id : 'relationList',
+              drag: false,
+              resize: false,
+              fixed: true,
+              lock: true,
+              background: '#600', // 背景色
+              title : '添加相关',
+              width: 800,
+              height: 400,
+              top:60,
+              left:300,
+              opacity: 0.87,	// 透明度
+              cancelVal: '关闭',
+              cancel: true
+          }
+      );
+      
+      
+      
+  });
+
+  $("#addOtherCat").click(function(){
+      var defaultCatValue = $("#selectedUl").html();
+      // 存储数据
+      art.dialog.data('defaultCatValue', defaultCatValue);
+      art.dialog.data('catid',  {$category.catid});
+      art.dialog.open(
+          "{:url('Content/cmpSelectCategorys')}", 
+          {
+              id : 'addOtherCat',
+              drag: false,
+              resize: false,
+              fixed: true,
+              background: '#600', // 背景色
+              title : '同时发布到其他栏目',
+              lock:  true,
+              width: 800,
+              height: 400,
+              top:60,
+              left:300,
+              opacity: 0.87,	// 透明度
+              ok:function(iframeWin, topWin){
+                  var obj = iframeWin.document.getElementById('selectedUl');
+                  $("#selectedUl").html($(obj).html());
+              },
+              cancel: true
+          }
+      );
+  });
+
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+      
+
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $(".subBtn").button('loading');
+              //提交表单
+              $.post("{:url('Content/articleAdd')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doContentShow("{:url('Content/articleList', array('catid' => $category['catid']))}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写"},
+                  }
+      });
+
+      /*
+      $(".btns").autofix_anything({
+          onlyInContainer: false
+      });
+      */
+
+  });
+  
+    
+</SCRIPT>

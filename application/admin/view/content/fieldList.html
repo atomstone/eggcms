@@ -1,0 +1,151 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>模型管理<i class="fa fa-angle-right"></i></li>
+    <li>{$model.name}模型字段管理</li>
+    </ul>
+  </div>
+</div>
+<!--导航 end-->
+
+	<form id="searchForm" action="{:url('Content/fieldList', array('modelid' => $model['modelid']))}">
+	</form>
+	
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet box light-grey">
+
+      <div class="portlet-title">
+        <div class="caption"><i class="fa fa-case"></i>列表</div>
+        <div class="actions">
+          <a href="{:url('Content/fieldAdd', array('modelid' => $model['modelid']))}" class="toEditForm btn blue"><i class="fa fa-plus"></i> 添加字段</a>
+          <a href="{:url('Content/modelList')}" class="ajaxify btn default"><i class="fa fa-plus"></i> 返回</a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <form id="form1">
+        <table class="table  table-bordered table-hover" id="sample_1">
+          <thead>
+            <tr>
+              <th class="sorting" style="width:5%;">排序</th>
+              <th class="sorting" style="width:5%;">id</th>
+              <th class="sorting" style="width:15%;">字段名</th>
+              <th class="sorting" style="width:15%;">别名</th>
+              <th class="sorting" style="width:10%;">类型</th>
+              <th class="sorting" style="width:5%;">系统</th>
+              <th class="sorting" style="width:5%;">必填</th>
+              <th class="sorting" style="width:10%;">列表显示</th>
+              <th class="sorting" style="width:10%;">参与搜索</th>
+              <th class="sorting" style="width:10%;">启用</th>
+              <th class="sorting" style="width:10%;">管理操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($fields as $k => $v){ ?>
+            <tr class="odd gradeX">
+              <td><input type="text" name="setorder[{$v.fieldid}]" value="{$v.listorder}" style="width:35px;"  onkeyup="value=value.replace(/[^\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" ></td>
+              <td><?=$v['fieldid'];?></td>
+              <td><?=$v['field'];?></td>
+              <td><?=$v['name'];?></td>
+              <td><?=$v['formtype'];?></td>
+              <td>
+                <?=($v['issystem'] == 1) ? '<span style="color:green;font-weight:bold;">是</span>' : '否';?>
+              </td>
+              <td>
+                <?=($v['minlength'] >= 1) ? '<span style="color:green;font-weight:bold;">是</span>' : '否';?>
+              </td>
+              <td>
+                <a href="#this" onclick="fieldChangeIslist(<?=$v['fieldid'];?>);">
+                <?=($v['islist'] == 1) ? '<span style="color:green;font-weight:bold;">是</span>' : '<span style="color:red;">否</span>';?>
+                </a>
+              </td>
+              <td>
+                <a href="#this" onclick="fieldChangeIssearch(<?=$v['fieldid'];?>);">
+                <?=($v['issearch'] == 1) ? '<span style="color:green;font-weight:bold;">是</span>' : '<span style="color:red;">否</span>';?>
+                </a>
+              </td>
+              <td>
+                <a href="#this" onclick="fieldChangeDisabled(<?=$v['fieldid'];?>);">
+                <?=($v['disabled'] == 1) ? '<span style="color:red;" title="点击启用">已禁用</span>' : '<span  title="点击禁用" style="color:green;font-weight:bold;">已启用</span>';?>
+                </a>
+              </td>
+              <td>
+                <a class="toEditForm btn default btn-xs purple" href="{:url('Content/fieldEdit', array('fieldid' => $v['fieldid']))}"><i class="fa fa-edit"></i>修改 </a>
+              </td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+          <div class="form-actions">
+            <button id="btn-setorder" data-loading-text="正在处理排序..."  type="button" class="btn red">批量排序</button>
+            <a href="{:url('Content/modelList')}" class="ajaxify btn btn-default">返回</a>
+          </div>
+        </form>
+      </div>        
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+  jQuery(document).ready(function() {
+      TableList.init();
+  });
+
+  function fieldChangeIslist(fieldid){
+      $.post("{:url('Content/fieldChangeIslist')}", {fieldid:fieldid}, function(data){
+          data = eval(data);
+          if(data.code == 1){
+        	    success(data.msg);
+        	    TableList.listRefresh();
+          }else{
+              error(data.msg);
+          }
+      });
+  }
+    
+  function fieldChangeIssearch(fieldid){
+      $.post("{:url('Content/fieldChangeIssearch')}", {fieldid:fieldid}, function(data){
+          data = eval(data);
+          if(data.code == 1){
+        	    success(data.msg);
+        	    TableList.listRefresh();
+          }else{
+              error(data.msg);
+          }
+      });
+  }
+
+  function fieldChangeDisabled(fieldid){
+      $.post("{:url('Content/fieldChangeDisabled')}", {fieldid:fieldid}, function(data){
+          data = eval(data);
+          if(data.code == 1){
+        	    success(data.msg);
+        	    TableList.listRefresh();
+          }else{
+              error(data.msg);
+          }
+      });
+  }
+
+
+  //排序
+  $("#btn-setorder").click(function(){
+      var $btn = $("#btn-setorder").button('loading');
+      $.post("{:url('Content/fieldSetOrder')}", $('#form1').serialize(), function(data){
+          data = eval(data);
+          if(data.code == 1){
+        	    success(data.msg);
+        	    TableList.listRefresh();
+          }else{
+              error(data.msg);
+          }
+          $btn.button('reset');
+      });
+  });
+      
+
+
+</script>

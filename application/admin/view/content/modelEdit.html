@@ -1,0 +1,142 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>模型管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">模型列表</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑模型</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="col-auto">
+  <div class="col-1">
+    <div class="content pad-6">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>编辑模型
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="#portlet-config" data-toggle="modal" class="config"></a>
+					<a href="javascript:;" class="reload"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="data[modelid]" value="<?=$model['modelid'];?>">
+					<div class="form-body">
+						<h3 class="form-section">基本信息</h3>
+						<div class="form-group">
+							<label class="control-label col-md-3">模型名称</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[name]', 'name', $model['name']))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">模型表名</label>
+							<div class="col-md-4">
+							  {$model['tablename']}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">描述</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[description]', 'description', $model['description']))}
+							</div>
+						</div>
+					
+            <!--
+						<h3 class="form-section">模板信息</h3>
+            <div class="form-group">
+							<label class="control-label col-md-3">栏目首页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[category_template]', 'category_template', $model['category_template']))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">栏目列表页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[list_template]', 'list_template', $model['list_template']))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">内容页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/input', array('data[show_template]', 'show_template', $model['show_template']))}
+							</div>
+						</div>
+						-->
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Content/modelList')}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+      
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Content/modelEdit')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Content/modelList')}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+    
+</SCRIPT>
+

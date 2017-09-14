@@ -1,0 +1,93 @@
+{include file="../application/index/view/site_1/public/header.html" /}
+
+	<link href="{$site.patch_css}/article.css" rel="stylesheet" type="text/css">
+
+  <style type="text/css">
+    /* Pager */
+    .pager { padding:3px; margin:3px;}
+    .pager A,.pager SPAN{display:block; float:left;margin-right:3px; height:20px; line-height:20px; }
+    .pager A,.pager A:active  {display:block; float:left;border:1px solid #c5c5c5; color:#1485ff; padding:0 6px;}
+    .pager A:hover {border:1px solid #0099FF; text-decoration:none; color:#c00;}
+    .pager SPAN.current {background:#1485ff; border:1px solid #1485ff; color:#fff; font-weight:bold; padding:0 6px; }
+    .pager SPAN.disabled {border:1px solid #c5c5c5;  padding:0 6px; color:#c0c0c0;}
+  </style>
+
+	<div id="content">
+		
+		<div class="topToolBox">
+			<div class="pathWrap">
+				<div class="path">
+					<em>您现在的位置：</em>
+					<a class="home" href="/">首页</a>&gt;
+					<?php
+			    $siteCatNavs = widget('Content/getSiteCatNav', array($siteid, $currentcat['catid'],true));
+			    if($siteCatNavs){
+			        $nav = '';
+			        foreach($siteCatNavs as $k => $v){
+			            $nav .= "<a href='".$v['url']."' target='".$v['target']."'>".$v['catname']."</a>";    
+			            if(($k+1) < count($siteCatNavs)){
+			                $nav .= "&gt;";
+			            }
+			        }
+			        echo $nav;
+			    }
+					?>
+			  </div>
+			</div>
+		</div>
+	
+		<div class="side" id="sideDiv">
+			<div id="sideMenu" class="sideBox">
+				<div class="hd">
+					<h3><?=$topcat['catname'];?>　</h3>
+				</div>
+				<div class="bd">
+					<ul class="menuList">
+	          <?php $cats = widget('Content/getTreeCats', array($siteid, $topcat['catid'])); foreach($cats as $cat){ ?>
+	            <li class="<?=($cat['catid'] == $currentcat['catid']) ? 'on' : ''; ?>">
+	            	<a title="{$cat.catname}" href="{:url('Cms/index',array('catid'=>$cat.catid))}">{$cat.catname}</a>
+	            </li>
+	          <?php } ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="main" id="mainDiv">
+			<div class="mainBox">
+				<div class="wHd">
+				  <h3><span>{$currentcat.catname}　</span></h3>
+				</div>
+				<div class="wBd">
+					<ul class="newsList">				
+						<?php foreach($articles as $k => $v){ ?>
+	          <li>
+	          	<span class="date"><?=date('Y-m-d', $v['updatetime']);?></span>
+				    	<a href="<?=!empty($v['url']) ? $v['url'] : url('Cms/detail',array('catid'=>$v['catid'],'articleid'=>$v['id']));?>" target="_blank" title="标题：{$v.title}, 点击数：{$v.stick}">{$v.title}</a>
+	          </li>
+	          <?php if(($k+1)%5==0){ ?>
+	          <li class="split"></li>
+	          <?php } ?>
+		        <?php } ?>
+					</ul>
+          <div class="pageShow">
+            <span id="pe100_page_通用信息列表_普通式" class="pagecss">
+              <div class="pager">
+                <?=$page->showAdmin_1();?>
+              </div>
+            </span>
+          </div>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+
+  <script>
+  	if( $("#sideMenu .bd li").size()==0 ){
+  		$("#sideDiv").empty();
+  		$("#mainDiv").width(1140);
+    }
+  </script>
+
+{include file="../application/index/view/site_1/public/footer.html" /}

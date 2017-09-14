@@ -1,0 +1,164 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>白名单管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">白名单列表</a><i class="fa fa-angle-right"></i></li>
+    <li>批量导入白名单</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="col-auto">
+  <div class="col-1">
+    <div class="content pad-6">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>批量导入白名单
+				</div>
+				<div class="actions">
+					<a href="{:url('Memberwhite/whiteList')}" class="ajaxify btn btn-default">返回</a>
+				</div>
+			</div>
+			<div class="portlet-body">
+        <table class="table table-striped table-nomargin" border="0">
+          <tr>
+            <th align="left" style="width:20%;">
+              <button id='whiteexceluploadButton' style='cursor:pointer;' class='btn btn-primary' type='button'>选择并导入EXCEL文件</button>
+            </th>
+            <th align="left">
+              <a href="{$Think.config.web_res_root}/tmplate/member_white.xlsx" target="_blank">下载EXCEL导出模板</a>
+            </th>
+          </tr>
+          <tr><th align="left" id="progress" colspan="2"></th></tr>
+          <tr><th id="esignAudit" colspan="2"></th></tr>
+        </table>
+        <table class="table table-nomargin" id="table1" style="display:none;">
+          <thead>
+            <th style="width:10%;">序号</th>
+            <th style="width:30%;">姓名</th>
+            <th style="width:30%;">手机号</th>
+            <th style="width:30%;">分析结果</th>
+          </thead>
+          <tbody id="showData">
+          </tbody> 
+        </table>
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+
+
+/*
+ * 声明
+ */
+var att = {
+    excelPath   : '',                              //excel文件位置
+    excelData   : '',                              //EXCEL数据
+    nowRow      : 0,                               //当前正在分析的行数
+    winNum      : 0,                               //记录成功数量
+    failNum     : 0,                               //记录失败数量
+};
+
+function createUploadExcel(id){
+    var butStepImage = $('#'+id+'uploadButton');
+    $.ajax_upload(butStepImage, {
+    	  action: '{:url("upload/doUpload")}',
+        name: 'Filedata',
+        data:{type:'excel/memberwhite',dir:'excel'},
+        dataType:'json',
+        onSubmit: function (file, ext){
+            $("#progress").text('正在上传...');
+        },
+        onComplete : function(file, msg){
+            var msg = eval('(' + msg + ')');
+            if (msg.error == 0){
+                $('#'+id+'uploadButton').hide();
+                $('#'+id+'uploadButton').attr('class','btn btn-success');
+                $('#progress').text('上传成功');
+                $.post("{:url('memberwhite/whiteImport')}",{type:'loadexcel', excelpath:msg.url},function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                        att.excelData = eval(data.data);
+                        att.nowRow      = 0;                               //当前正在分析的行数
+                        att.winStus     = [];                              //保存分析成功的学员
+                        att.winNum      = 0;                               //记录成功数量
+                        att.failNum     = 0;                               //记录失败数量
+                        $("#progress").html('');
+                        $("#showData").html('');
+                        esignAnalysis();
+                  }else{
+                      $("#progress").text('分析excel失败:'+data.msg);
+                  }
+                });
+                
+            }else{
+                $("#progress").text('上传失败:'+msg.message);
+            }
+        }
+    })
+}
+
+createUploadExcel('whiteexcel');
+
+
+/*
+ * 分析
+ */
+function esignAnalysis(){
+    $("#table1").show();
+    if(att.nowRow < att.excelData.length){
+        var white_truename = att.excelData[att.nowRow][0];   //学号
+        var white_mobile   = att.excelData[att.nowRow][1];   //审核状态
+        var color    = "";
+        var txt      = "";
+            $.post("{:url('memberwhite/whiteImport')}",{type:'add', white_truename:white_truename, white_mobile:white_mobile},function(data){
+                data = eval(data);
+                if(data.code == 1){
+                    att.winStus[att.nowRow] = att.excelData[att.nowRow];
+                    color = "green";
+                    att.winNum++;
+                }else{
+                    color = "red";
+                    att.failNum++;
+                }
+                $("#progress").html("<img src='{$Think.config.web_res_root}img/input-spinner.gif'>正在分析：共有 "+((att.excelData.length)-1)+" 条数据，正在分析第 "+att.nowRow+"条。");
+                txt += "<tr id='num_"+att.nowRow+"'  style='display:none;color:"+color+";'>";
+                txt += "<td>"+(att.nowRow+1)+"</td>";
+                txt += "<td>"+att.excelData[att.nowRow][0]+"</td>";
+                txt += "<td>"+att.excelData[att.nowRow][1]+"</td>";
+                txt += "<td>"+data.msg+"</td>";
+                txt += "</tr>";
+                $("#showData").prepend(txt);
+                $("#num_"+att.nowRow).fadeIn(600,function(){
+                    att.nowRow++;
+                    esignAnalysis();
+                });
+    		});
+        
+    }else{
+        $("#progress").html("共有 "+(att.excelData.length)+" 条数据，分析完成。");
+        $("#progress").append("<br>");
+        $("#progress").append("<font color='red'>红色：红色为错误信息"+att.failNum+"条；</font>");
+        $("#progress").append("<font color='green'> 绿色：绿色为导入成功信息"+att.winNum+"条！</font>");
+        $('#whiteexceluploadButton').show();
+    }
+}
+    
+</SCRIPT>
+

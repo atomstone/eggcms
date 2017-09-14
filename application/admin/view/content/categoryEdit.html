@@ -1,0 +1,200 @@
+<!--导航 start-->
+<div class="row">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <ul class="page-breadcrumb breadcrumb">
+    <li><i class="fa fa-home"></i>栏目管理<i class="fa fa-angle-right"></i></li>
+    <li><a href="">栏目列表</a><i class="fa fa-angle-right"></i></li>
+    <li>编辑栏目</li>
+    </ul>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+  </div>
+</div>
+<!--导航 end-->
+
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN VALIDATION STATES-->
+		<div class="portlet box green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-reorder"></i>编辑{:config('category.type')[$category['type']]}
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="#portlet-config" data-toggle="modal" class="config"></a>
+					<a href="javascript:;" class="reload"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form action="#this" id="form1" class="form-horizontal">
+				  <input type="hidden" name="data[catid]" value="<?=$category['catid'];?>">
+					<div class="form-body">
+						<h3 class="form-section">基本选项</h3>
+						    
+						<div class="form-group">
+							<label class="control-label col-md-3">类型</label>
+							<div class="col-md-4">
+								{:widget('Form/select', array(config('category.type'), 'data[type]', 'type', $category['type'], array('fun'=>'changetype(this)')))}
+							</div>
+						</div>
+						
+						<div class="form-group type_all type_0">
+							<label class="control-label col-md-3">请选择模型</label>
+							<div class="col-md-4">
+								{:widget('Form/modelSelect', array($siteid, 'data[modelid]', 'modelid', $category['modelid']))}
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-3">上级栏目</label>
+							<div class="col-md-4">
+								{:widget('Form/categorySelect', array($siteid, 'data[parentid]', 'parentid', $category['parentid']))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">栏目名称</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[catname]', 'catname', $category['catname']))}
+							</div>
+						</div>
+						<div class="form-group type_all type_2">
+							<label class="control-label col-md-3">链接地址</label>
+							<div class="col-md-4">
+								{:widget('Form/input', array('data[url]', 'url', $category['url']))}
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">栏目图片</label>
+							<div class="col-md-4">
+								{:widget('Form/upOneFile', array('data[image]', 'image', $category['image']))}								
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-3">描述</label>
+							<div class="col-md-9">
+								{:widget('Form/textarea', array('data[description]', 'description', $category['description']))}
+							</div>
+						</div>
+
+						<h3 class="form-section type_all type_0 type_1">模板设置</h3>
+
+						<div class="form-group type_all type_0">
+							<label class="control-label col-md-3">栏目首页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('setting[category_template]', 'category_template', isset($category['setting']['category_template']) ? $category['setting']['category_template'] : '', $siteid, 'cms', 'category'))}
+							</div>
+						</div>
+						<div class="form-group type_all type_0">
+							<label class="control-label col-md-3">栏目列表页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('setting[list_template]', 'list_template', isset($category['setting']['list_template']) ? $category['setting']['list_template'] : '', $siteid, 'cms', 'category'))}
+							</div>
+						</div>
+						<div class="form-group type_all type_0">
+							<label class="control-label col-md-3">栏目内容页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('setting[show_template]', 'show_template', isset($category['setting']['show_template']) ? $category['setting']['show_template'] : '', $siteid, 'cms', 'category'))}
+							</div>
+						</div>
+
+						<div class="form-group type_all type_1">
+							<label class="control-label col-md-3">栏目内容页模板</label>
+							<div class="col-md-4">
+							  {:widget('Form/tmpSelect', array('setting[page_template]', 'page_template', isset($category['setting']['page_template']) ? $category['setting']['page_template'] : '', $siteid, 'cms', 'catpage'))}
+							</div>
+						</div>
+						
+						<h3 class="form-section type_all type_0 type_all type_1">SEO 设置</h3>
+            <div class="form-group type_all type_0 type_all type_1"> 
+              <label class="control-label col-md-3">META Title（栏目标题）</label>
+              <div class="col-md-4">
+                {:widget('Form/input', array('setting[meta_title]', 'meta_title', isset($category['setting']['meta_title']) ? $category['setting']['meta_title'] : ''))}
+                <span class="help-block">针对搜索引擎设置的标题</span>
+              </div>
+            </div>
+            <div class="form-group type_all type_0 type_all type_1"> 
+              <label class="control-label col-md-3">META Keywords（栏目关键词）</label>
+              <div class="col-md-4">
+                {:widget('Form/textarea', array('setting[meta_keywords]', 'meta_keywords', isset($category['setting']['meta_keywords']) ? $category['setting']['meta_keywords'] : ''))}
+                <span class="help-block">关键字中间用半角逗号隔开</span>
+              </div>
+            </div>
+            <div class="form-group type_all type_0 type_all type_1"> 
+              <label class="control-label col-md-3">META Description（栏目描述）</label>
+              <div class="col-md-4">
+                {:widget('Form/textarea', array('setting[meta_description]', 'meta_description', isset($category['setting']['meta_description']) ? $category['setting']['meta_description'] : ''))}
+                <span class="help-block">针对搜索引擎设置的网页描述</span>
+              </div>
+            </div>
+
+					</div>
+					<div class="form-actions fluid">
+						<div class="col-md-offset-3 col-md-9">
+              <button class="btn green" data-loading-text="正在处理..." type="submit" id="sub"><i class="fa fa-check"></i>保存</button>
+              <button href="{:url('Content/categoryList')}" class="ajaxify btn default" type="button" id="gobackBtn">返回</button>
+						</div>
+					</div>
+				</form>
+				<!-- END FORM-->
+			</div>
+		</div>
+		<!-- END VALIDATION STATES-->
+	</div>
+</div>
+
+<SCRIPT type="text/javascript">
+
+  /*
+  * 表单校验 提交
+  */
+  jQuery(document).ready(function($){
+      
+      $.validator.setDefaults({
+          submitHandler: function(form){
+              var $btn = $("#sub").button('loading');
+              //提交表单
+              $.post("{:url('Content/categoryEdit')}", $('#form1').serialize(), function(data){
+                  data = eval(data);
+                  if(data.code == 1){
+                	    success(data.msg);
+                	    App.doShow("{:url('Content/categoryList')}");
+                  }else{
+                      error(data.msg);
+                      $btn.button('reset');
+                  }
+              });
+          }
+      });
+      $("#form1").validate({
+  		    event:"blur",
+  		    errorElement: "span",
+          errorPlacement: function(error, element) { //配置错误信息输出
+              error.appendTo( element.parent("div") );
+          },
+          success: function(label) {
+              label.text("").addClass("success"); //返回值
+          },
+          rules: {
+                //"data[test]": {required:true},
+                  },
+          messages: {
+                //"data[test]": {required:"请填写手机号"},
+                  }
+      });
+      
+  });
+
+  function changetype(obj){
+      typeid = $(obj).val();
+      $(".type_all").hide();
+      $(".type_"+typeid).show();
+  }
+
+  $(".type_all").hide();
+  $(".type_<?=$category['type'];?>").show();
+
+</SCRIPT>
+

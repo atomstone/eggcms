@@ -1,0 +1,160 @@
+{include file="../application/admin/view/public/header.html" /}
+<!-- BEGIN BODY -->
+<body class="page-header-fixed">
+<!-- BEGIN HEADER -->
+<div class="header navbar navbar-fixed-top mega-menu">
+	<!-- BEGIN TOP NAVIGATION BAR -->
+	<div class="header-inner">
+		<!-- BEGIN LOGO -->	
+		<a class="navbar-brand" href="/" target="_blank" style="padding-left:30px"><span style="color:#C3C3C3;font-weight:bold;">{:config('web_name')}</span><span style="color:#F53E3E;font-weight:bold;"></span></a>
+		<!-- END LOGO -->
+		
+		<!-- 顶部菜单 start -->
+		<div class="hor-menu hidden-sm hidden-xs">
+			<ul class="nav navbar-nav">
+        <?php foreach($menus as $k => $v){ ?>
+  		      <li name="menu_num{$v.menuid}" class="classic-menu-dropdown <?=($k==0) ? 'active' : '';?>"><a href="#this">{$v.menuname}<span class="selected"></span></a></li>
+        <?php } ?>
+			</ul>
+		</div>
+		<!-- 顶部菜单 end -->
+		
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<img src="{$Think.config.web_res_root}img/menu-toggler.png" alt=""/>
+		</a>
+		<!-- END RESPONSIVE MENU TOGGLER -->
+		<!-- BEGIN TOP NAVIGATION MENU -->
+		<ul class="nav navbar-nav pull-right">
+			<!-- BEGIN NOTIFICATION DROPDOWN -->
+			<li class="dropdown" id="header_notification_bar">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+					<i class="fa fa-th-large"></i>
+					<span class="badge">{$site.name}</span>
+				</a>
+				<ul class="dropdown-menu extended notification">
+					<li><p>请选择站点</p></li>
+					<li>
+						<ul class="dropdown-menu-list scroller" style="height: 250px;">
+						  <?php foreach($sites as $v){ ?>
+							<li>
+								<a href="{:url('Index/home', array('siteid'=>$v['siteid']))}">
+								  <span class="label label-icon label-success"><i class="fa fa-plus"></i></span>{$v.name}
+								</a>
+							</li>
+						  <?php } ?>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<!-- END NOTIFICATION DROPDOWN -->
+
+			<!-- END TODO DROPDOWN -->
+			<!-- BEGIN USER LOGIN DROPDOWN -->
+			<li class="dropdown user">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+					<img alt="" src="{$Think.config.web_res_root}img/avatar1_small.jpg"/>
+					<span class="username hidden-1024"><?=!empty($admininfo['realname']) ? $admininfo['realname'] : $admininfo['adminname'];?></span>
+					<i class="fa fa-angle-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="{:url('Index/logout')}">
+							<i class="fa fa-key"></i> 退出登录
+						</a>
+					</li>
+				</ul>
+			</li>
+			<!-- END USER LOGIN DROPDOWN -->
+		</ul>
+		<!-- END TOP NAVIGATION MENU -->
+	</div>
+	<!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+	<!-- BEGIN HORIZONTAL MENU PAGE SIDEBAR1 -->
+	<div class="page-sidebar navbar-collapse collapse">
+		<!--BEGIN: SIDEBAR MENU FOR DESKTOP-->
+		<ul class="page-sidebar-menu hidden-sm hidden-xs" data-auto-scroll="true" data-slide-speed="200">
+			<li>
+				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+				<div class="sidebar-toggler hidden-sm hidden-xs">
+				</div>
+				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+			</li>
+			
+
+      <?php foreach($menus as $k => $top){ ?>
+          <li class="menu_master_li menu_num{$top.menuid} start" style="display:<?=($k==0) ? '' : 'none';?>">
+    				<a href="javascript:;">
+    					<i class="fa fa-cogs"></i>
+    					<span class="title">{$top.menuname}</span>
+    					<span class="selected "></span>
+    					<span class="arrow open"></span>
+    				</a>
+    				<ul class="sub-menu" style="display: block;">
+    				  <?php foreach($top['sub'] as $sub){ ?>
+                  <li><a class="ajaxify" href="{:url($sub['c'].'/'.$sub['a'])}">{$sub.menuname}</a></li>
+              <?php } ?>
+    				</ul>
+    			</li>
+      <?php } ?>
+		</ul>
+	</div>
+	<!-- END BEGIN HORIZONTAL MENU PAGE SIDEBAR -->
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper">
+		<div class="page-content" style="padding-top:9px;">
+		  <div class="page-content-body">
+			</div>
+		</div>
+	</div>
+	<!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="footer">
+	<div class="footer-inner">
+		 <?=date('Y');?> &copy; Metronic by {:config('web_name')}.
+	</div>
+	<div class="footer-tools">
+		<span class="go-top">
+			<i class="fa fa-angle-up"></i>
+		</span>
+	</div>
+</div>
+<!-- END FOOTER -->
+
+{include file="../application/admin/view/public/js.html" /}
+
+<script>
+    jQuery(document).ready(function() {
+      
+       App.init();
+       ComponentsDropdowns.init();
+       $('.page-sidebar .ajaxify.start').click(); // load the content for the dashboard page.
+       
+             
+       $(".classic-menu-dropdown").click(function(){
+           $(".menu_master_li").hide();
+           $("."+$(this).attr('name')).show();
+           $(".classic-menu-dropdown").attr('class','classic-menu-dropdown');
+           $(this).attr('class','classic-menu-dropdown active');
+           
+           $("."+$(this).attr('name')).children('ul:first').children('li:first').children('a:first').click();
+          // 下面的 ul(.sub-menu)的li的a点击
+       });
+       
+    });
+    
+    //location.reload();
+    
+	</script>
+	
+
+{include file="../application/admin/view/public/footer.html" /}
+
